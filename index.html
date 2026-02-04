@@ -8,651 +8,146 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description"
-        content="Order fresh groceries online from Arihant Provision Stores in Alandi Devachi, Pune. Best quality rice, dal, oil, spices at affordable prices.">
-    <meta name="keywords"
-        content="grocery store alandi, online grocery pune, provision store, arihant provision, kirana store">
+        content="Order fresh groceries online from Arihant Provision Stores in Alandi Devachi, Pune. Best quality rice, dal, oil, spices.">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
-            --primary-color: #ff6b35;
+            --primary: #ff6b35;
             --primary-dark: #e85d2a;
-            --secondary-color: #27ae60;
-            --bg-color: #f8f9fa;
-            --text-dark: #2c3e50;
-            --text-light: #6c757d;
+            --secondary: #27ae60;
+            --bg: #f4f7f6;
+            --text: #2d3436;
             --white: #ffffff;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --radius: 12px;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        img {
-            max-width: 100%;
-            display: block;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-        }
-
-        /* Utility Classes */
-        .container {
-            width: 100%;
-            padding: 0 20px;
-            margin: 0 auto;
-            max-width: 1200px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-primary {
-            color: var(--primary-color);
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .flex-between {
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .grid {
-            display: grid;
-            gap: 25px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .mt-1 {
-            margin-top: 0.5rem;
-        }
-
-        .mt-2 {
-            margin-top: 1.5rem;
-        }
-
-        .mb-2 {
-            margin-bottom: 1.5rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 60px; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+        
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .flex { display: flex; align-items: center; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .hidden { display: none !important; }
+        .mt-2 { margin-top: 20px; }
+        .mb-2 { margin-bottom: 20px; }
+        .text-center { text-align: center; }
+        .text-primary { color: var(--primary); }
+        .text-red { color: #e74c3c; }
 
         /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 24px;
-            border-radius: 50px;
-            /* Pillow shape for modern look */
-            font-weight: 600;
-            transition: var(--transition);
-            text-align: center;
-            border: 2px solid transparent;
-        }
+        .btn { padding: 10px 20px; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-secondary { background: white; color: var(--text); border: 1px solid #ddd; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-block { width: 100%; }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: var(--white);
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
+        /* Inputs */
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: var(--radius); margin-bottom: 15px; background: white; font-size: 1rem; }
+        input:focus { outline: none; border-color: var(--primary); }
+        
+        /* Navbar */
+        header { background: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 15px 0; }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+        .nav-link { margin-left: 20px; font-weight: 500; cursor: pointer; }
+        .hamburger { display: none; font-size: 1.5rem; cursor: pointer; }
 
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-            transform: translateX(-100%);
-            transition: transform 0.4s;
-            z-index: -1;
-        }
+        /* Cards */
+        .card { background: white; padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid #eee; transition: 0.3s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .product-img { height: 180px; width: 100%; object-fit: contain; margin-bottom: 10px; }
+        
+        /* Order Status Badges */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .bg-pending { background: #fff3cd; color: #856404; }
+        .bg-ready { background: #d1ecf1; color: #0c5460; }
+        .bg-completed { background: #d4edda; color: #155724; }
 
-        .btn-primary:active {
-            transform: scale(0.95);
-            box-shadow: none;
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
-            transform: translateY(-3px);
-            filter: brightness(1.1);
-        }
-
-        .btn-primary:hover::after {
-            transform: translateX(100%);
-        }
-
-        .btn-secondary {
-            background-color: var(--white);
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-secondary:active {
-            transform: scale(0.95);
-            background-color: #f0f0f0;
-        }
-
-        .btn-secondary:hover {
-            background-color: #fff5f0;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-sm {
-            padding: 6px 16px;
-            font-size: 0.85rem;
-        }
-
-        .btn-block {
-            width: 100%;
-            display: flex;
-        }
-
-        /* Header */
-        header {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            letter-spacing: -0.5px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .nav-link {
-            font-weight: 500;
-            color: var(--text-dark);
-            transition: color 0.3s;
-        }
-
-        .nav-link.active,
-        .nav-link:hover {
-            color: var(--primary-color);
-        }
-
-        .cart-icon-wrapper {
-            position: relative;
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--secondary-color);
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 50%;
-        }
-
-        /* Mobile Menu */
-        .hamburger {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1000');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-
-        /* Product Card */
-        .product-grid {
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid #f0f0f0;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border-color: #ffd8cc;
-        }
-
-        .card-img {
-            height: 220px;
-            width: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .card:hover .card-img {
-            transform: scale(1.05);
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .badge {
-            background-color: #fcece7;
-            color: var(--primary-dark);
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .price {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .qty-selector {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin: 15px 0;
-            background: #f8f9fa;
-            padding: 5px;
-            border-radius: 30px;
-        }
-
-        .qty-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: white;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            color: var(--primary-color);
-            transition: 0.2s;
-        }
-
-        .qty-btn:active {
-            background: #eee;
-            transform: scale(0.9);
-        }
-
-        .unit-select {
-            border: none;
-            background: #f8f9fa;
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 38px;
-            cursor: pointer;
-            color: #777;
-        }
-
-        /* Dashboard */
-        .dashboard-layout {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .sidebar {
-            background: white;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            height: fit-content;
-        }
-
-        .sidebar-item {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .sidebar-item:hover,
-        .sidebar-item.active {
-            color: var(--primary-color);
-            background: #fff5f0;
-        }
-
-        /* Cart & Orders */
-        .cart-item {
-            display: flex;
-            gap: 15px;
-            padding: 15px;
-            background: white;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            align-items: center;
-            border: 1px solid #eee;
-        }
-
-        .cart-img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .status-Pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-Ready {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .status-Completed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        /* Modal */
-        #modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        /* Loading Spinner */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        /* Spinner */
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Toast */
-        #toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 4px;
-            z-index: 2000;
-            transform: translateY(-100px);
-            transition: transform 0.3s;
+        #toast { position: fixed; top: 20px; right: 20px; background: #333; color: white; padding: 12px 24px; border-radius: 8px; z-index: 2000; transform: translateY(-100px); transition: 0.3s; }
+        #toast.show { transform: translateY(0); }
+
+        /* Mobile */
+        @media(max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-menu { position: fixed; top: 60px; left: -100%; width: 100%; background: white; flex-direction: column; padding: 20px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); transition: 0.3s; }
+            .nav-menu.active { left: 0; }
+            .nav-link { margin: 10px 0; font-size: 1.1rem; }
+            .hero h1 { font-size: 1.8rem; }
         }
-
-        #toast.show {
-            transform: translateY(0);
-        }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 60px;
-                left: -100%;
-                width: 100%;
-                background: white;
-                flex-direction: column;
-                padding: 20px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                transition: 0.3s;
-            }
-
-            .nav-links.active {
-                left: 0;
-            }
-
-            .dashboard-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .flex-between {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-        }
+        
+        .password-wrapper { position: relative; }
+        .password-toggle { position: absolute; right: 15px; top: 15px; cursor: pointer; color: #777; }
+        .shop-closed-banner { background: #e74c3c; color: white; text-align: center; padding: 10px; font-weight: 600; }
+        
+        /* Admin Table */
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .admin-table th, .admin-table td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        .admin-table th { background-color: #f8f9fa; }
     </style>
 </head>
 
 <body>
 
-    <!-- Notification Toast -->
-    <div id="toast">Item added to cart</div>
+    <div id="toast">Notification</div>
 
-    <!-- Modals Container -->
-    <div id="modal-container" class="hidden"></div>
+    <!-- Shop Closed Banner -->
+    <div id="shop-closed-msg" class="shop-closed-banner hidden">
+        ⛔ Shop is currently CLOSED. Please visit during working hours.
+    </div>
 
     <!-- Navigation -->
     <header>
         <div class="container flex-between">
-            <div class="logo">Arihant Provision</div>
-            <div class="hamburger" onclick="toggleMenu()">☰</div>
-            <nav>
-                <ul class="nav-links" id="main-nav">
-                    <li><a href="#" class="nav-link" onclick="navigate('home')">Home</a></li>
-                    <li><a href="#" class="nav-link" onclick="navigate('products')">Products</a></li>
-                    <li><a href="#" class="nav-link" onclick="navigate('dashboard')">Dashboard</a></li>
-                    <li id="auth-link"><a href="#" class="nav-link btn btn-primary btn-sm"
-                            onclick="navigate('login')">Login</a></li>
-                </ul>
+            <div class="logo" onclick="app.navigate('home')">Arihant Provision</div>
+            <div class="hamburger" onclick="document.getElementById('nav-menu').classList.toggle('active')">☰</div>
+            <nav class="flex nav-menu" id="nav-menu">
+                <a class="nav-link" onclick="app.navigate('home')">Home</a>
+                <a class="nav-link" onclick="app.navigate('products')">Products</a>
+                <a class="nav-link" onclick="app.navigate('dashboard')">Cart (<span id="cart-count">0</span>)</a>
+                <a class="nav-link" onclick="app.navigate('about')">About</a>
+                <a class="nav-link" onclick="app.navigate('contact')">Contact</a>
+                <span id="auth-nav"></span>
             </nav>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main id="app" style="min-height: 80vh; padding-bottom: 50px;">
-        <!-- CONTENT INJECTED BY JS -->
+    <!-- Main App Container -->
+    <main id="app-content" style="min-height: 80vh; padding-top: 20px;">
+        <!-- Content injected via JS -->
     </main>
 
     <!-- Footer -->
-    <footer style="background: #2c3e50; color: white; padding: 40px 0; margin-top: 50px;">
-        <div class="container">
-            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-                <div>
-                    <h3>Arihant Provision Stores</h3>
-                    <p style="opacity: 0.7; margin-top: 10px;">Your trusted local grocery partner.</p>
-                </div>
-                <div>
-                    <h4>Contact Us</h4>
-                    <p>📞 9881469046</p>
-                    <p>📍 Behind K.K. Hospital, Markal Road,<br>Alandi Devachi, Pune</p>
-                </div>
-                <div>
-                    <h4>Quick Links</h4>
-                    <a href="#" onclick="navigate('products')"
-                        style="display:block; margin-top:5px; opacity:0.7;">Browse Products</a>
-                    <a href="#admin-login" onclick="navigate('admin-login')"
-                        style="display:block; margin-top:5px; opacity:0.7;">Admin Access</a>
-                </div>
-            </div>
-            <div
-                style="text-align: center; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; font-size: 0.9rem;">
-                &copy; 2026 Arihant Provision Stores. All Rights Reserved.
-            </div>
+    <footer style="background: #333; color: #fff; padding: 30px 0; margin-top: 40px;">
+        <div class="container text-center">
+            <h3>Arihant Provision Stores</h3>
+            <p>Behind K.K. Hospital, Markal Road, Alandi Devachi, Pune</p>
+            <p class="mt-2">📞 <a href="tel:9881469046" style="color: var(--primary);">9881469046</a></p>
+            <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 20px;">© 2026 Arihant Provision Stores</p>
         </div>
     </footer>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- 1. FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyB-yMrlMnPcEYJrg38qH_XQjJBpN69Eqyk",
             authDomain: "arihant-provision-stores.firebaseapp.com",
@@ -661,832 +156,712 @@
             messagingSenderId: "376012889023",
             appId: "1:376012889023:web:01fcdff59448e9ea399f0a"
         };
-
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- STATE MANAGEMENT ---
-        const State = {
-            currentUser: null,
+        // --- 2. STATE MANAGEMENT ---
+        const app = {
+            user: null,
             userData: null,
-            products: [],
             cart: [],
-            shopStatus: 'open',
-            userData: null,
             products: [],
-            cart: [],
             shopStatus: 'open',
-            orders: [], // For admin or customer history
-            ordersFetched: false, // For caching
-            currentView: 'home',
-            isLoading: false
-        };
-
-        const Constants = {
-            ADMIN_USER: "Devichand",
-            ADMIN_PASS: "Yashraj@123",
-            // Sample Data for Initial Load if DB empty
-            SAMPLE_PRODUCTS: [
-                { name: "Toor Dal Premium", category: "Dals", basePrice: 160, unit: "kg", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Ftoor_dal.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" },
-                { name: "Moong Dal", category: "Dals", basePrice: 140, unit: "kg", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Fmoong_dal.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" },
-                { name: "Basmati Rice", category: "Rice", basePrice: 120, unit: "kg", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Fbasmati_rice.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" },
-                { name: "Sona Masoori Rice", category: "Rice", basePrice: 80, unit: "kg", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Fsona_masoori_rice.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" },
-                { name: "Sunflower Oil", category: "Oils", basePrice: 155, unit: "liter", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Fsunflower_oil.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" },
-                { name: "Red Chilli Powder", category: "Spices", basePrice: 240, unit: "kg", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Fred_chilli_powder.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" },
-                { name: "Turmeric Powder", category: "Spices", basePrice: 200, unit: "kg", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Fturmeric_powder.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" },
-                { name: "Tata Salt", category: "Grocery", basePrice: 25, unit: "kg", image: "https://firebasestorage.googleapis.com/v0/b/arihant-provision-stores.appspot.com/o/products%2Ftata_salt.jpg?alt=media&token=12345678-abcd-efgh-ijkl-1234567890ab" }
-            ],
-            CATEGORIES: ["All", "Dals", "Rice", "Oils", "Spices", "Grocery"]
-        };
-
-        // --- UTILS ---
-        const $ = (selector) => document.querySelector(selector);
-        const showToast = (msg) => {
-            const t = $('#toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        };
-        const toggleMenu = () => $('#main-nav').classList.toggle('active');
-        const formatPrice = (p) => `₹${p}`;
-        const generateId = () => `APS-2026-${Math.floor(100000 + Math.random() * 900000)}`;
-
-        // --- APP CONTROLLER ---
-
-        async function initApp() {
-            // Check Admin Session
-            if (!sessionStorage.getItem('isAdmin')) sessionStorage.setItem('isAdmin', 'false');
-
-            // Listen to Auth State
-            auth.onAuthStateChanged(async (user) => {
-                State.currentUser = user;
-                if (user) {
-                    $('#auth-link').innerHTML = `<a href="#" class="nav-link" onclick="logout()">Logout</a>`;
-                    // Load User Profile & Cart
-                    const doc = await db.collection('users').doc(user.uid).get();
-                    if (doc.exists) {
-                        State.userData = doc.data();
-                        State.cart = State.userData.cart || [];
+            editingId: null, // Tracks if we are editing a product
+            
+            // --- INIT ---
+            init: async () => {
+                auth.onAuthStateChanged(async (u) => {
+                    app.user = u;
+                    if (u) {
+                        try {
+                            const doc = await db.collection('users').doc(u.uid).get();
+                            if (doc.exists) {
+                                app.userData = doc.data();
+                                app.cart = app.userData.cart || [];
+                            } else {
+                                 app.userData = { name: u.email ? u.email.split('@')[0] : 'User' };
+                                 app.cart = [];
+                            }
+                        } catch (e) {
+                            console.log("User data fetch error:", e);
+                            app.userData = { name: "Guest" };
+                        }
                     } else {
-                        // Create doc if missing
-                        await db.collection('users').doc(user.uid).set({
-                            mobile: user.email.split('@')[0],
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            cart: []
+                        app.userData = null;
+                        app.cart = [];
+                    }
+                    app.renderNav();
+                    app.updateCartCount();
+                });
+
+                db.collection('settings').doc('config').onSnapshot(snap => {
+                    if(snap.exists) {
+                        app.shopStatus = snap.data().shopStatus || 'open';
+                        const banner = document.getElementById('shop-closed-msg');
+                        if(app.shopStatus === 'closed') banner.classList.remove('hidden');
+                        else banner.classList.add('hidden');
+                    }
+                }, error => console.warn("Settings error, defaulting open"));
+
+                await app.fetchProducts();
+                app.navigate('home');
+            },
+
+            // --- ROUTER ---
+            navigate: (page) => {
+                const main = document.getElementById('app-content');
+                document.getElementById('nav-menu').classList.remove('active');
+                window.scrollTo(0,0);
+                
+                switch(page) {
+                    case 'home': main.innerHTML = pages.home(); break;
+                    case 'products': main.innerHTML = pages.products(); break;
+                    case 'about': main.innerHTML = pages.about(); break;
+                    case 'contact': main.innerHTML = pages.contact(); break;
+                    case 'login': main.innerHTML = pages.login(); break;
+                    case 'signup': main.innerHTML = pages.signup(); break;
+                    case 'dashboard': 
+                        if(!app.user) app.navigate('login');
+                        else {
+                            main.innerHTML = pages.dashboard(); 
+                            setTimeout(() => components.loadUserOrders(), 10);
+                        }
+                        break;
+                    case 'admin-login': main.innerHTML = pages.adminLogin(); break;
+                    case 'admin-dashboard': 
+                        if(sessionStorage.getItem('isAdmin') === 'true') {
+                            main.innerHTML = pages.adminDashboard();
+                            // Load both orders and products for admin
+                            setTimeout(() => {
+                                app.loadAdminData();
+                                app.renderAdminProducts();
+                            }, 50);
+                        } else {
+                            app.navigate('admin-login');
+                        }
+                        break;
+                    default: main.innerHTML = pages.home();
+                }
+            },
+
+            // --- CORE ACTIONS ---
+            fetchProducts: async () => {
+                try {
+                    const snap = await db.collection('products').get();
+                    if(!snap.empty) {
+                        app.products = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                    } else throw new Error("No products");
+                } catch (e) {
+                    console.warn("Using Fallback Products");
+                    app.products = []; // If empty, admin can add
+                }
+            },
+
+            addToCart: (productId) => {
+                if(app.shopStatus === 'closed') return alert("Shop is closed.");
+                if (!app.user) { app.showToast("Login Required"); return app.navigate('login'); }
+                
+                const card = document.querySelector(`[data-pid="${productId}"]`);
+                const qty = parseInt(card.querySelector('.qty-val').innerText);
+                const unitSelect = card.querySelector('.unit-select');
+                const unitVal = parseFloat(unitSelect.value);
+                const unitText = unitSelect.options[unitSelect.selectedIndex].text;
+                
+                const p = app.products.find(x => x.id === productId);
+                const finalPrice = Math.ceil(p.basePrice * unitVal);
+
+                const existing = app.cart.find(i => i.id === productId && i.unitText === unitText);
+                if(existing) existing.qty += qty;
+                else app.cart.push({ ...p, qty, unitVal, unitText, price: finalPrice });
+
+                app.saveCart();
+                app.updateCartCount();
+                app.showToast("Added to Cart 🛒");
+            },
+
+            saveCart: () => {
+                if(app.user) db.collection('users').doc(app.user.uid).update({ cart: app.cart }).catch(e => console.log("Cart save error"));
+            },
+            
+            updateCartCount: () => {
+                const count = app.cart.reduce((a,b) => a + b.qty, 0);
+                const badge = document.getElementById('cart-count');
+                if(badge) badge.innerText = count;
+            },
+
+            placeOrder: async () => {
+                if(app.cart.length === 0) return alert("Cart is empty");
+                
+                const type = document.querySelector('input[name="orderType"]:checked').value;
+                const address = document.getElementById('delivery-addr')?.value;
+
+                if(type === 'Delivery' && !address) return alert("Please enter delivery address");
+
+                const total = app.cart.reduce((s, i) => s + (i.price * i.qty), 0);
+                const orderId = `APS-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+
+                const order = {
+                    orderId,
+                    uid: app.user.uid,
+                    customerName: app.userData.name,
+                    mobile: app.userData.mobile,
+                    items: app.cart,
+                    total,
+                    type,
+                    address: type === 'Delivery' ? address : 'Pickup from Shop',
+                    status: 'Pending',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                try {
+                    await db.collection('orders').doc(orderId).set(order);
+                    app.cart = [];
+                    app.saveCart();
+                    app.updateCartCount();
+                    app.navigate('dashboard');
+                    alert(`Order Placed! ID: ${orderId}`);
+                } catch (e) {
+                    alert("Order Failed. Check internet/permissions.");
+                }
+            },
+
+            // --- AUTH ---
+            handleLogin: async (e) => {
+                e.preventDefault();
+                const input = document.getElementById('login-mobile').value.trim();
+                const pass = document.getElementById('login-pass').value;
+                const email = input.includes('@') ? input : `${input}@arihant.store`;
+
+                try {
+                    await auth.signInWithEmailAndPassword(email, pass);
+                    app.navigate('dashboard');
+                    app.showToast("Logged in Successfully");
+                } catch(err) {
+                    alert("Login Failed: " + err.message);
+                }
+            },
+
+            handleSignup: async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('reg-name').value;
+                const mobile = document.getElementById('reg-mobile').value.trim();
+                const pass = document.getElementById('reg-pass').value;
+                
+                if(mobile.length < 10) return alert("Invalid Mobile");
+                if(pass.length < 6) return alert("Password too short");
+
+                const email = `${mobile}@arihant.store`; 
+
+                try {
+                    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                    await db.collection('users').doc(cred.user.uid).set({
+                        name, mobile, cart: [], joined: new Date()
+                    });
+                    app.navigate('dashboard');
+                    app.showToast("Account Created!");
+                } catch(err) {
+                    alert("Signup Failed: " + err.message);
+                }
+            },
+
+            // --- ADMIN FEATURES ---
+            loginAdmin: async (e) => {
+                e.preventDefault();
+                const u = document.getElementById('admin-u').value;
+                const p = document.getElementById('admin-p').value;
+                
+                if(u === "Devichand" && p === "Yashraj@123") {
+                    sessionStorage.setItem('isAdmin', 'true');
+                    // FIX: Wait for connection before navigating
+                    if(!auth.currentUser) {
+                        try { await auth.signInAnonymously(); } catch(e){ console.log("Auth err", e); }
+                    }
+                    app.navigate('admin-dashboard');
+                } else alert("Invalid Admin Credentials");
+            },
+            
+            toggleShop: async () => {
+                const newStatus = app.shopStatus === 'open' ? 'closed' : 'open';
+                try {
+                    await db.collection('settings').doc('config').set({ shopStatus: newStatus }, { merge: true });
+                    app.showToast(`Shop is now ${newStatus.toUpperCase()}`);
+                    app.loadAdminData();
+                } catch(e) { alert("Error: Check DB Permissions"); }
+            },
+
+            updateStatus: async (oid, status) => {
+                try {
+                    await db.collection('orders').doc(oid).update({ status });
+                    app.showToast("Status Updated");
+                } catch(e) { alert("Error: Check DB Permissions"); }
+            },
+
+            // Product Management
+            handleProductSubmit: async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('p-name').value;
+                const cat = document.getElementById('p-cat').value;
+                const price = Number(document.getElementById('p-price').value);
+                const unit = document.getElementById('p-unit').value;
+                const img = document.getElementById('p-img').value;
+
+                try {
+                    if (app.editingId) {
+                        // UPDATE Existing
+                        await db.collection('products').doc(app.editingId).update({ 
+                            name, category: cat, basePrice: price, unit, image: img 
                         });
-                        State.cart = [];
-                    }
-                } else {
-                    $('#auth-link').innerHTML = `<a href="#" class="nav-link btn btn-primary btn-sm" onclick="navigate('login')">Login</a>`;
-                    State.cart = []; // Clear local cart
-                }
-                updateCartBadge();
-            });
-
-            // Fetch Settings
-            const settingsSnap = await db.collection('settings').doc('shop_status').get();
-            if (settingsSnap.exists) State.shopStatus = settingsSnap.data().shopStatus;
-
-            // Fetch Products
-            await fetchProducts();
-
-            // Initial Route
-            navigate('home');
-        }
-
-        async function fetchProducts() {
-            try {
-                const snapshot = await db.collection('products').get();
-                if (snapshot.empty) {
-                    State.products = Constants.SAMPLE_PRODUCTS.map((p, idx) => ({ ...p, id: 'init_' + idx }));
-                    // IMPORTANT: In a real app, we would admin-seed this. 
-                    // For this demo, we use memory products if DB is empty, or can auto-seed.
-                    // Let's auto-seed for convenience if empty
-                    // Constants.SAMPLE_PRODUCTS.forEach(p => db.collection('products').add(p));
-                } else {
-                    State.products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                }
-            } catch (e) { console.error("Err fetching products", e); }
-        }
-
-        function navigate(view) {
-            State.currentView = view;
-            $('#modal-container').classList.add('hidden'); // Close modals
-            $('#main-nav').classList.remove('active'); // Close mobile menu
-            window.scrollTo(0, 0);
-
-            const app = $('#app');
-            // Removed artificial loader delay for snappier experience for the user
-
-            switch (view) {
-                case 'home': app.innerHTML = renderHome(); break;
-                case 'products': app.innerHTML = renderProductsPage(); break;
-                case 'login': app.innerHTML = renderLogin(); break;
-                case 'signup': app.innerHTML = renderSignup(); break;
-                case 'dashboard':
-                    if (State.currentUser) app.innerHTML = renderUserDashboard();
-                    else navigate('login');
-                    break;
-                case 'admin-login': app.innerHTML = renderAdminLogin(); break;
-                case 'admin-dashboard':
-                    if (sessionStorage.getItem('isAdmin') === 'true') {
-                        renderAdminDashboard(app); // Async render
+                        app.showToast("Product Updated!");
+                        app.editingId = null;
+                        document.getElementById('product-form-title').innerText = "Add New Product";
+                        document.getElementById('submit-product-btn').innerText = "Add Product";
                     } else {
-                        navigate('admin-login');
+                        // ADD New
+                        await db.collection('products').add({ 
+                            name, category: cat, basePrice: price, unit, image: img 
+                        });
+                        app.showToast("Product Added!");
                     }
-                    break;
-                default: app.innerHTML = renderHome();
-            }
-            attachEventHandlers();
-        }
+                    e.target.reset();
+                    // Refresh data
+                    await app.fetchProducts();
+                    app.renderAdminProducts();
+                } catch(e) { 
+                    alert("Error saving product. Check DB permissions."); 
+                }
+            },
 
-        // --- VIEWS ---
+            editProduct: (id) => {
+                const p = app.products.find(x => x.id === id);
+                if(!p) return;
+                
+                // Populate Form
+                document.getElementById('p-name').value = p.name;
+                document.getElementById('p-cat').value = p.category;
+                document.getElementById('p-price').value = p.basePrice;
+                document.getElementById('p-unit').value = p.unit;
+                document.getElementById('p-img').value = p.image;
+                
+                // Change Mode
+                app.editingId = id;
+                document.getElementById('product-form-title').innerText = "Edit Product";
+                document.getElementById('submit-product-btn').innerText = "Update Product";
+                
+                // Scroll to form
+                document.getElementById('admin-product-form').scrollIntoView({behavior: 'smooth'});
+            },
 
-        function renderHome() {
-            const featured = State.products.slice(0, 4);
-            return `
-                <div class="fade-in">
-                    <section class="hero">
-                        <div class="container">
-                            <h1>Arihant Provision Stores</h1>
-                            <p>Your Trusted Local Grocery Shop in Alandi Devachi</p>
-                            <div style="margin-top: 20px;">
-                                <button onclick="navigate('products')" class="btn btn-primary">Shop Now 🛒</button>
-                                <a href="https://wa.me/919881469046" target="_blank" class="btn btn-secondary" style="margin-left: 10px;">Message on WhatsApp 💬</a>
+            deleteProduct: async (id) => {
+                if(!confirm("Are you sure you want to delete this product?")) return;
+                try {
+                    await db.collection('products').doc(id).delete();
+                    app.showToast("Product Deleted");
+                    await app.fetchProducts();
+                    app.renderAdminProducts();
+                } catch(e) {
+                    alert("Error deleting. Check DB permissions.");
+                }
+            },
+
+            renderAdminProducts: () => {
+                const container = document.getElementById('admin-products-list');
+                if(!container) return;
+                
+                if(app.products.length === 0) {
+                    container.innerHTML = "<p>No products found.</p>";
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div style="overflow-x:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${app.products.map(p => `
+                                    <tr>
+                                        <td><img src="${p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;"></td>
+                                        <td>${p.name}<br><small>${p.category}</small></td>
+                                        <td>₹${p.basePrice}/${p.unit}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary" onclick="app.editProduct('${p.id}')">✏️</button>
+                                            <button class="btn btn-sm btn-danger" onclick="app.deleteProduct('${p.id}')">🗑️</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            },
+
+            loadAdminData: async () => {
+                try {
+                    const snap = await db.collection('orders').limit(20).get(); 
+                    const orders = snap.docs.map(d => d.data());
+                    orders.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                    const container = document.getElementById('admin-orders');
+                    if(container) {
+                        container.innerHTML = orders.map(o => `
+                            <div class="card mb-2" style="border-left: 5px solid ${o.status === 'Pending' ? 'orange' : 'green'}">
+                                <div class="flex-between">
+                                    <strong>#${o.orderId}</strong>
+                                    <select onchange="app.updateStatus('${o.orderId}', this.value)">
+                                        <option ${o.status==='Pending'?'selected':''}>Pending</option>
+                                        <option ${o.status==='Ready'?'selected':''}>Ready</option>
+                                        <option ${o.status==='Completed'?'selected':''}>Completed</option>
+                                    </select>
+                                </div>
+                                <p>${o.customerName} (${o.mobile})</p>
+                                <p><strong>${o.type}</strong> - ${o.address}</p>
+                                <div style="background:#eee; padding:5px; margin:5px 0; font-size:0.9rem">
+                                    ${o.items.map(i => `${i.qty} x ${i.name} (${i.unitText})`).join(', ')}
+                                </div>
+                                <p class="text-primary font-bold">Total: ₹${o.total}</p>
                             </div>
+                        `).join('');
+                    }
+                } catch (e) {
+                    document.getElementById('admin-orders').innerHTML = "<p>Error loading orders. Check DB permissions.</p>";
+                }
+            },
+
+            // --- UTILS ---
+            renderNav: () => {
+                const nav = document.getElementById('auth-nav');
+                if(app.user) nav.innerHTML = `<a class="nav-link btn btn-primary btn-sm" onclick="app.navigate('dashboard')">Dashboard</a>`;
+                else nav.innerHTML = `<a class="nav-link btn btn-primary btn-sm" onclick="app.navigate('login')">Login</a>`;
+            },
+            
+            showToast: (msg) => {
+                const t = document.getElementById('toast');
+                t.textContent = msg;
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
+            },
+            
+            togglePass: (id) => {
+                const x = document.getElementById(id);
+                x.type = x.type === "password" ? "text" : "password";
+            }
+        };
+
+        // --- 3. PAGE TEMPLATES ---
+        const pages = {
+            home: () => `
+                <div class="container fade-in">
+                    <section style="background:linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000'); background-size:cover; color:white; padding:80px 20px; border-radius:20px; text-align:center;">
+                        <h1>Arihant Provision Stores</h1>
+                        <p>Your Trusted Local Grocery Shop in Alandi</p>
+                        <div class="mt-2">
+                            <button class="btn btn-primary" onclick="app.navigate('products')">Order Now 🛒</button>
+                            <a href="tel:9881469046" class="btn btn-secondary">Call 9881469046 📞</a>
                         </div>
                     </section>
-
-                    <div class="container mt-2">
-                        <div class="card" style="padding: 25px; background: white; border-left: 5px solid var(--primary-color);">
-                            <div class="flex-between">
-                                <div>
-                                    <h3 style="margin-bottom: 5px;">Store Timings 🕒</h3>
-                                    <p style="color:#666;">Sun - Fri: 9am - 1pm, 4pm - 9pm</p>
-                                    <p style="color:#666;">Saturday: 9am - 1pm</p>
-                                </div>
-                                <div class="text-right">
-                                    <h3 class="${State.shopStatus === 'open' ? 'text-primary' : 'text-danger'}" style="font-size: 1.5rem;">
-                                        ${State.shopStatus === 'open' ? 'OPEN ✅' : 'CLOSED ❌'}
-                                    </h3>
-                                    <small style="color:#888;">Live Status</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container mt-2">
-                        <div class="flex-between mb-2">
-                            <h2>Featured Products</h2>
-                            <a href="#" onclick="navigate('products')" class="text-primary" style="font-weight: 600;">View All →</a>
-                        </div>
-                        <div class="grid product-grid">
-                            ${featured.map(p => renderProductCard(p)).join('')}
-                        </div>
-                    </div>
-
-                    <div class="container mt-2 mb-2">
-                        <h2 class="text-center mb-2">Visit Us 📍</h2>
-                        <div style="border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); border: 4px solid white;">
-                            <!-- Improved Map Coordinates: 18.67703235940226, 73.9013691807544 -->
-                            <iframe src="https://maps.google.com/maps?q=18.67703235940226,73.9013691807544&z=17&output=embed" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
+                    <div class="card mt-2 text-center">
+                        <h3>Shop Timings 🕒</h3>
+                        <p>Sun - Fri: 9:00 AM – 1:00 PM, 4:00 PM – 9:00 PM</p>
+                        <p>Saturday: 9:00 AM – 1:00 PM</p>
+                        <p class="mt-2"><strong>Status:</strong> ${app.shopStatus === 'open' ? '<span style="color:green">OPEN ✅</span>' : '<span style="color:red">CLOSED ❌</span>'}</p>
                     </div>
                 </div>
-            `;
-        }
+            `,
 
-        function renderProductsPage() {
-            return `
-                <div class="container mt-2 fade-in">
+            products: () => `
+                <div class="container fade-in">
                     <h2 class="text-center mb-2">Our Products</h2>
-                    
-                    <div class="flex" style="gap: 10px; overflow-x: auto; padding: 10px 0; justify-content: center; margin-bottom: 20px;">
-                        ${Constants.CATEGORIES.map(cat => `
-                            <button onclick="filterProducts('${cat}')" class="btn btn-sm btn-secondary category-btn" data-cat="${cat}" style="border-radius: 20px; padding: 8px 20px;">${cat}</button>
-                        `).join('')}
-                    </div>
-
-                    <div class="mt-1 mb-2" style="position: relative; max-width: 600px; margin: 0 auto 30px;">
-                        <input type="text" placeholder="Search for items..." onkeyup="searchProducts(this.value)" style="padding-left: 45px; border-radius: 30px;">
-                        <span style="position: absolute; left: 15px; top: 12px; font-size: 1.2rem; color: #aaa;">🔍</span>
-                    </div>
-
-                    <div class="grid product-grid" id="product-list-container">
-                        ${State.products.map(p => renderProductCard(p)).join('')}
+                    <div class="grid" id="product-grid">
+                        ${app.products.map(p => components.productCard(p)).join('')}
                     </div>
                 </div>
-            `;
-        }
+            `,
 
-        function renderProductCard(p) {
-            const unit = p.unit || 'kg';
-            return `
-            <div class="card product-card fade-in" data-cat="${p.category}" data-name="${p.name.toLowerCase()}">
-                <div style="position:relative;">
-                    <img src="${p.image}" class="card-img" alt="${p.name}">
-                    <span class="badge" style="position: absolute; top: 10px; left: 10px;">${p.category}</span>
-                </div>
-                <div class="card-body">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 5px; height: 45px; overflow: hidden;">${p.name}</h3>
-                    
-                    <div class="flex-between">
-                        <select class="unit-select" onchange="updateCardPrice(this)">
-                            <option value="1" selected>1 ${unit}</option>
-                            <option value="0.5">500 gm / 0.5 ${unit}</option>
-                            <option value="0.25">250 gm / 0.25 ${unit}</option>
-                        </select>
-                        <span class="price p-price" data-base="${p.basePrice}">₹${p.basePrice}</span>
+            about: () => `
+                <div class="container fade-in text-center">
+                    <h2>About Arihant Provision</h2>
+                    <div class="card mt-2">
+                        <p>Welcome to Arihant Provision Stores! We have been serving the Alandi Devachi community with high-quality groceries, spices, and daily essentials.</p>
+                        <p class="mt-2">We pride ourselves on offering the best rates and freshest stock directly to your doorstep.</p>
+                        <h3 class="mt-2">Owner: Devichand</h3>
                     </div>
-
-                    <div class="qty-selector">
-                        <button class="qty-btn" onclick="adjQty(this, -1)">-</button>
-                        <span class="qty-val" style="font-weight: 600;">1</span>
-                        <button class="qty-btn" onclick="adjQty(this, 1)">+</button>
-                    </div>
-
-                    <button class="btn btn-primary btn-block" onclick="addToCartClick(this, '${p.id}', '${p.name}', '${p.image}', '${unit}')">
-                        Add to Cart 🛒
-                    </button>
                 </div>
-            </div>
-            `;
-        }
+            `,
 
+            contact: () => `
+                <div class="container fade-in">
+                    <h2 class="text-center">Contact Us</h2>
+                    <div class="card mt-2">
+                        <p>📍 <strong>Address:</strong> Behind K.K. Hospital, Markal Road, Alandi Devachi, Pune</p>
+                        <p>📞 <strong>Phone:</strong> <a href="tel:9881469046">9881469046</a></p>
+                        <p>💬 <strong>WhatsApp:</strong> <a href="https://wa.me/919881469046">Chat with us</a></p>
+                    </div>
+                </div>
+            `,
 
-        function renderLogin() {
-            return `
-                <div class="container flex fade-in" style="justify-content: center; height: 70vh; align-items: center;">
-                    <div class="card" style="padding: 40px; width: 100%; max-width: 420px;">
-                        <h2 class="text-center mb-2">Welcome Back! 👋</h2>
-                        <form onsubmit="handleLogin(event)">
-                            <div class="form-group">
-                                <label class="form-label">Mobile Number</label>
-                                <input type="tel" id="login-mobile" placeholder="9876543210" pattern="[0-9]{10}" required>
+            login: () => `
+                <div class="container" style="max-width:400px; margin-top:40px;">
+                    <div class="card">
+                        <h2 class="text-center">Customer Login</h2>
+                        <form onsubmit="components.handleLogin(event)">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="login-mobile" placeholder="Enter Mobile Number" pattern="[0-9]{10}" required>
+                            
+                            <label>Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="login-pass" placeholder="Password" required>
+                                <span class="password-toggle" onclick="app.togglePass('login-pass')">👁️</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Password</label>
-                                <input type="password" id="login-pass" required>
-                                <span class="password-toggle" onclick="togglePass('login-pass')">👁️</span>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 20px;">Login</button>
+                            <button class="btn btn-primary btn-block">Login</button>
                         </form>
-                        <p class="text-center mt-2">
-                            New here? <a href="#" onclick="navigate('signup')" class="text-primary" style="font-weight: 600;">Create Account</a>
-                        </p>
-                        <p class="text-center mt-1 item-offset">
-                             <a href="#" onclick="navigate('admin-login')" style="font-size: 0.8rem; color: #999;">Admin Access</a>
-                        </p>
+                        <p class="text-center mt-2">New? <a href="#" onclick="app.navigate('signup')" class="text-primary">Create Account</a></p>
+                    </div>
+                    <!-- Admin Option Below Customer Login -->
+                    <div class="text-center mt-2">
+                        <a href="#" onclick="app.navigate('admin-login')" style="font-size:0.8rem; color:#999;">Admin Access</a>
                     </div>
                 </div>
-            `;
-        }
+            `,
 
-        function renderSignup() {
-            return `
-                <div class="container flex fade-in" style="justify-content: center; height: 80vh; align-items: center;">
-                    <div class="card" style="padding: 40px; width: 100%; max-width: 420px;">
-                        <h2 class="text-center mb-2">Create Account</h2>
-                        <form onsubmit="handleSignup(event)">
-                            <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" id="reg-name" required>
+            signup: () => `
+                <div class="container" style="max-width:400px; margin-top:40px;">
+                    <div class="card">
+                        <h2 class="text-center">Create Account</h2>
+                        <form onsubmit="components.handleSignup(event)">
+                            <label>Full Name</label>
+                            <input type="text" id="reg-name" placeholder="Full Name" required>
+                            
+                            <label>Mobile Number</label>
+                            <input type="tel" id="reg-mobile" placeholder="Mobile Number" pattern="[0-9]{10}" required>
+                            
+                            <label>Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="reg-pass" placeholder="Password (Min 6 chars)" minlength="6" required>
+                                <span class="password-toggle" onclick="app.togglePass('reg-pass')">👁️</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Mobile Number</label>
-                                <input type="tel" id="reg-mobile" placeholder="9876543210" pattern="[0-9]{10}" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Password</label>
-                                <input type="password" id="reg-pass" minlength="6" required>
-                                <span class="password-toggle" onclick="togglePass('reg-pass')">👁️</span>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 20px;">Sign Up</button>
+                            <button class="btn btn-primary btn-block">Sign Up</button>
                         </form>
-                        <p class="text-center mt-2">
-                            Already have an account? <a href="#" onclick="navigate('login')" class="text-primary" style="font-weight: 600;">Login</a>
-                        </p>
+                        <p class="text-center mt-2">Have account? <a href="#" onclick="app.navigate('login')" class="text-primary">Login</a></p>
                     </div>
                 </div>
-            `;
-        }
+            `,
 
-        function renderUserDashboard() {
-            return `
-                <div class="container dashboard-layout fade-in">
-                    <aside class="sidebar">
-                        <div class="text-center mb-2">
-                            <h3>👋 ${State.userData?.name || 'Customer'}</h3>
+            dashboard: () => `
+                <div class="container">
+                    <div class="flex-between mb-2">
+                        <div>
+                            <h2>Welcome, ${app.userData?.name || 'User'}</h2>
+                            <button class="btn btn-sm btn-primary mt-2" onclick="app.navigate('products')">Browse Products 🛒</button>
                         </div>
-                        <div class="sidebar-item active" onclick="switchDashTab('cart')">🛒 My Cart</div>
-                        <div class="sidebar-item" onclick="switchDashTab('orders')">📦 Order History</div>
-                        <div class="sidebar-item" onclick="switchDashTab('profile')">👤 Profile</div>
-                        <div class="sidebar-item" style="color: red;" onclick="logout()">🚪 Logout</div>
-                    </aside>
-                    <div id="dash-content">
-                        ${renderCartTab()}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderCartTab() {
-            if (State.cart.length === 0) return `<div class="text-center p-5 fade-in"><h3>Your cart is empty 🛒</h3><button class="btn btn-primary mt-2" onclick="navigate('products')">Browse Products</button></div>`;
-
-            let total = State.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-
-            return `
-                <div class="fade-in">
-                    <h2>My Cart (${State.cart.length} items)</h2>
-                    <div class="mt-2">
-
-                    ${State.cart.map((item, idx) => `
-                        <div class="cart-item">
-                            <img src="${item.image}" class="cart-img">
-                            <div style="flex-grow:1;">
-                                <h4>${item.name}</h4>
-                                <small>${item.selectedUnit} Pack</small>
-                                <div class="price">₹${item.unitPrice * item.quantity}</div>
-                            </div>
-                            <div class="qty-selector">
-                                <button class="qty-btn" onclick="updateCartItem(${idx}, -1)">-</button>
-                                <span>${item.quantity}</span>
-                                <button class="qty-btn" onclick="updateCartItem(${idx}, 1)">+</button>
-                            </div>
-                            <button onclick="removeFromCart(${idx})" style="color: red;">🗑️</button>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <div class="card mt-2" style="padding: 20px;">
-                    <div class="flex-between">
-                        <h3>Total Amount:</h3>
-                        <h2 class="text-primary">₹${total}</h2>
+                        <button class="btn btn-sm btn-secondary" onclick="auth.signOut(); app.navigate('home')">Logout</button>
                     </div>
                     
-                    ${State.shopStatus === 'closed' ? `
-                        <div class="alert" style="background: #ffebee; color: #c62828; padding: 15px; margin: 15px 0; border-radius: 5px;">
-                            ⚠️ Shop is currently CLOSED. Please visit during working hours.
-                        </div>
-                    ` : `
-                        <hr class="mt-2 mb-2">
-                        <h4>Order Type:</h4>
-                        <div class="flex mt-1" style="gap: 20px;">
-                            <label><input type="radio" name="orderType" value="delivery" checked onclick="$('#addr-box').classList.remove('hidden')"> Home Delivery</label>
-                            <label><input type="radio" name="orderType" value="takeaway" onclick="$('#addr-box').classList.add('hidden')"> Takeaway (Pickup)</label>
-                        </div>
-                        
-                        <div id="addr-box" class="mt-2">
-                            <label class="form-label">Delivery Address</label>
-                            <textarea id="delivery-address" rows="3" placeholder="Flat No, Wing, Building, Landmark..."></textarea>
-                            <small class="text-primary" style="display:block; margin-top:5px; font-weight:500;">ⓘ Delivery charges may vary depending on distance.</small>
-                        </div>
-                        
-                        <button class="btn btn-primary btn-block mt-2" onclick="placeOrder()">Place Order (₹${total})</button>
-                    `}
-                </div>
-                </div>
-            `;
-        }
-
-        // --- LOGIC: CART & PRODUCTS ---
-
-        function updateCardPrice(selectElem) {
-            const card = selectElem.closest('.card');
-            const basePrice = parseFloat(card.querySelector('.p-price').getAttribute('data-base'));
-            const unitMultiplier = parseFloat(selectElem.value);
-            const qty = parseInt(card.querySelector('.qty-val').innerText);
-
-            const finalPrice = Math.ceil(basePrice * unitMultiplier * qty);
-            card.querySelector('.p-price').innerText = `₹${finalPrice}`;
-        }
-
-        function adjQty(btn, delta) {
-            const span = btn.parentElement.querySelector('.qty-val');
-            let val = parseInt(span.innerText) + delta;
-            if (val < 1) val = 1;
-            span.innerText = val;
-
-            // Update price
-            const card = btn.closest('.card');
-            if (card) {
-                const select = card.querySelector('.unit-select');
-                updateCardPrice(select);
-            }
-        }
-
-        function addToCartClick(btn, pid, name, img, unit) {
-            if (!State.currentUser) {
-                showToast("Please Login to add items");
-                navigate('login');
-                return;
-            }
-
-            const card = btn.closest('.card');
-            const unitVal = parseFloat(card.querySelector('.unit-select').value);
-            const qty = parseInt(card.querySelector('.qty-val').innerText);
-            const basePrice = parseFloat(card.querySelector('.p-price').getAttribute('data-base'));
-
-            const unitLabel = unitVal === 1 ? `1 ${unit}` : (unitVal === 0.5 ? '500 gm' : '250 gm');
-            const finalUnitPrice = Math.ceil(basePrice * unitVal); // Price for 1 unit of that size
-
-            // Check if same item exists
-            const existingIdx = State.cart.findIndex(i => i.productId === pid && i.selectedUnit === unitLabel);
-
-            if (existingIdx > -1) {
-                State.cart[existingIdx].quantity += qty;
-            } else {
-                State.cart.push({
-                    productId: pid, name, image: img,
-                    quantity: qty, unitPrice: finalUnitPrice, selectedUnit: unitLabel
-                });
-            }
-
-            saveCart();
-            showToast("Added to Cart!");
-            updateCartBadge();
-        }
-
-        function saveCart() {
-            if (State.currentUser) {
-                db.collection('users').doc(State.currentUser.uid).update({ cart: State.cart });
-            }
-        }
-
-        function updateCartItem(idx, delta) {
-            State.cart[idx].quantity += delta;
-            if (State.cart[idx].quantity < 1) State.cart.splice(idx, 1);
-            saveCart();
-            document.getElementById('dash-content').innerHTML = renderCartTab();
-            updateCartBadge();
-        }
-
-        function removeFromCart(idx) {
-            State.cart.splice(idx, 1);
-            saveCart();
-            document.getElementById('dash-content').innerHTML = renderCartTab();
-            updateCartBadge();
-        }
-
-        function updateCartBadge() {
-            const count = State.cart.length;
-            const badge = `<div class="cart-icon-wrapper" onclick="navigate('dashboard')">
-                <span style="font-size: 1.5rem; cursor: pointer;">🛒</span>
-                ${count > 0 ? `<span class="cart-count">${count}</span>` : ''}
-            </div>`;
-
-            // Inject into nav if possible, or just keep state
-            // For this design, we'll append to header if verified
-            const nav = document.querySelector('nav ul');
-            if (nav) {
-                const existing = document.getElementById('cart-nav-item');
-                if (existing) existing.remove();
-                const li = document.createElement('li');
-                li.id = 'cart-nav-item';
-                li.innerHTML = badge;
-                nav.appendChild(li);
-            }
-        }
-
-        function filterProducts(cat) {
-            $('.category-btn').forEach(b => b.classList.remove('btn-primary'));
-            $('.category-btn').forEach(b => b.classList.add('btn-secondary'));
-            $(`button[data-cat="${cat}"]`).classList.remove('btn-secondary');
-            $(`button[data-cat="${cat}"]`).classList.add('btn-primary');
-
-            const cards = document.querySelectorAll('.product-card');
-            cards.forEach(c => {
-                if (cat === "All" || c.getAttribute('data-cat') === cat) c.classList.remove('hidden');
-                else c.classList.add('hidden');
-            });
-        }
-
-        function searchProducts(query) {
-            const q = query.toLowerCase();
-            document.querySelectorAll('.product-card').forEach(c => {
-                const name = c.getAttribute('data-name');
-                if (name.includes(q)) c.classList.remove('hidden');
-                else c.classList.add('hidden');
-            });
-        }
-
-        // --- AUTH LOGIC ---
-
-        function togglePass(id) {
-            const el = document.getElementById(id);
-            el.type = el.type === 'password' ? 'text' : 'password';
-        }
-
-        async function handleSignup(e) {
-            e.preventDefault();
-            const name = $('#reg-name').value;
-            const mobile = $('#reg-mobile').value;
-            const pass = $('#reg-pass').value;
-            const email = `${mobile}@arihant.store`;
-
-            try {
-                const cred = await auth.createUserWithEmailAndPassword(email, pass);
-                await db.collection('users').doc(cred.user.uid).set({
-                    name, mobile, cart: [], createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                navigate('dashboard');
-                showToast("Welcome to Arihant Provision!");
-            } catch (err) {
-                alert("Error: " + err.message);
-            }
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            const mobile = $('#login-mobile').value;
-            const pass = $('#login-pass').value;
-            const email = `${mobile}@arihant.store`;
-
-            try {
-                await auth.signInWithEmailAndPassword(email, pass);
-                navigate('dashboard');
-            } catch (err) {
-                alert("Invalid Credentials");
-            }
-        }
-
-        function logout() {
-            auth.signOut();
-            sessionStorage.clear();
-            navigate('home');
-        }
-
-        // --- ORDER LOGIC ---
-
-        async function placeOrder() {
-            const type = document.querySelector('input[name="orderType"]:checked').value;
-            const addr = type === 'delivery' ? $('#delivery-address').value : 'Pickup from Shop';
-
-            if (type === 'delivery' && !addr) { alert("Please enter delivery address"); return; }
-
-            const total = State.cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-            const orderId = generateId();
-
-            const order = {
-                orderId,
-                customerId: State.currentUser.uid,
-                customerName: State.userData.name,
-                customerMobile: State.userData.mobile,
-                items: State.cart,
-                totalAmount: total,
-                orderType: type,
-                deliveryAddress: addr,
-                status: 'Pending',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            try {
-                await db.collection('orders').doc(orderId).set(order);
-
-                // Clear Cart
-                State.cart = [];
-                saveCart();
-
-                // Show Success Modal
-                const modal = $('#modal-container');
-                modal.classList.remove('hidden');
-                modal.innerHTML = `
-                    <div id="modal-overlay">
-                        <div class="modal text-center">
-                            <div style="font-size: 3rem;">✅</div>
-                            <h2>Order Placed!</h2>
-                            <p class="mb-2">Thank you for ordering.</p>
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; text-align: left; margin-bottom: 20px;">
-                                <p><strong>Order ID:</strong> ${orderId}</p>
-                                <p><strong>Amount:</strong> ₹${total}</p>
-                                <p><strong>Type:</strong> ${type.toUpperCase()}</p>
-                                ${type === 'takeaway' ? `<p class="text-primary mt-1"><strong>Pickup Address:</strong><br>Behind K.K. Hospital, Markal Road, Alandi</p>` : ''}
-                            </div>
-                            <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
-                            <button class="btn btn-secondary" onclick="navigate('dashboard')">Close</button>
-                        </div>
-                    </div>
-                `;
-            } catch (e) {
-                alert("Order Failed: " + e.message);
-            }
-        }
-
-        async function switchDashTab(tab) {
-            // Update active sidebar
-            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-            event.target.classList.add('active'); // simple hack, ignores icon clicks strictly
-
-            const container = $('#dash-content');
-            container.innerHTML = '<div class="loader"></div>';
-
-            if (tab === 'cart') container.innerHTML = renderCartTab();
-            else if (tab === 'orders') {
-                if (State.ordersFetched && State.orders.length > 0) {
-                    renderOrdersList(container, State.orders);
-                } else {
-                    try {
-                        // Removed orderBy('createdAt') to fix missing index errors. Sorting in client.
-                        const snaps = await db.collection('orders').where('customerId', '==', State.currentUser.uid).limit(20).get();
-                        const orders = snaps.docs.map(d => d.data());
-                        orders.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); // Client-side sort
-
-                        State.orders = orders;
-                        State.ordersFetched = true;
-                        renderOrdersList(container, orders);
-                    } catch (e) {
-                        console.error(e);
-                        container.innerHTML = `<p class="text-center text-danger">Error loading orders: ${e.message}</p>`;
-                    }
-                }
-            }
-            else if (tab === 'profile') {
-                // Simple profile view
-                container.innerHTML = `
-                    <div class="fade-in">
-                        <h2>Profile Settings</h2>
-                        <div class="card mt-2 p-2">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input value="${State.userData.name}" readonly  style="background: #eee;">
-                            </div>
-                             <div class="form-group">
-                                <label>Mobile</label>
-                                <input value="${State.userData.mobile}" readonly style="background: #eee;">
-                            </div>
-                            <p class="text-center mt-2">To update details, please contact admin.</p>
-                        </div>
-                    </div>
-                 `;
-            }
-        }
-
-        function renderOrdersList(container, orders) {
-            if (orders.length === 0) container.innerHTML = "<h3 class='fade-in'>No past orders.</h3>";
-            else {
-                container.innerHTML = `<div class="fade-in"><h2>Order History</h2>` + orders.map(o => `
-                        <div class="card mt-2" style="padding: 15px;">
-                            <div class="flex-between">
-                                <h4>#${o.orderId}</h4>
-                                <span class="status-badge status-${o.status}">${o.status}</span>
-                            </div>
-                            <p><small>${o.createdAt ? new Date(o.createdAt.seconds * 1000).toDateString() : 'Just now'}</small></p>
-                            <p><strong>₹${o.totalAmount}</strong> • ${o.orderType}</p>
-                            <div class="mt-1" style="color:#666; font-size: 0.9rem;">
-                                ${o.items.map(i => `${i.name} (${i.quantity} x ${i.selectedUnit})`).join(', ')}
-                            </div>
-                        </div>
-                    `).join('') + `</div>`;
-            }
-        }
-
-        // --- ADMIN LOGIC ---
-
-        function renderAdminLogin() {
-            return `
-                 <div class="container flex fade-in" style="justify-content: center; height: 70vh; align-items: center;">
-                    <div class="card" style="padding: 30px; width: 100%; max-width: 400px; border-top: 5px solid red;">
-                        <h2 class="text-center mb-2">Admin Panel</h2>
-                        <form onsubmit="handleAdminLogin(event)">
-                            <div class="form-group">
-                                <label class="form-label">Username</label>
-                                <input type="text" id="admin-user" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Password</label>
-                                <input type="password" id="admin-pass" required>
-                                <span class="password-toggle" onclick="togglePass('admin-pass')">👁️</span>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block" style="background: #d32f2f;">Access Dashboard</button>
-                        </form>
-                    </div>
-                </div>
-            `;
-        }
-
-        async function handleAdminLogin(e) {
-            e.preventDefault();
-            const u = $('#admin-user').value.trim();
-            const p = $('#admin-pass').value.trim();
-
-            if (u === Constants.ADMIN_USER && p === Constants.ADMIN_PASS) {
-                // 1. Set Session Check
-                sessionStorage.setItem('isAdmin', 'true');
-
-                // 2. Perform Real Firebase Auth (Required for Database Access)
-                try {
-                    // Try to sign in as special admin user
-                    await auth.signInWithEmailAndPassword('admin@arihant.store', 'admin123456');
-                    navigate('admin-dashboard');
-                } catch (err) {
-                    if (err.code === 'auth/user-not-found') {
-                        // Auto-create if not exists
-                        try {
-                            await auth.createUserWithEmailAndPassword('admin@arihant.store', 'admin123456');
-                            navigate('admin-dashboard');
-                        } catch (createErr) {
-                            alert("Admin Auth Creation Failed: " + createErr.message);
-                        }
-                    } else {
-                        // If password wrong or other issue, try anonymous or just warn
-                        console.error("Admin Firebase Auth failed", err);
-                        // Fallback: If they are already logged in as someone else, it might work if rules allow.
-                        // If not, we try to proceed but warn.
-                        if (auth.currentUser) navigate('admin-dashboard');
-                        else {
-                            alert("Database Connection Failed. Please ensure you are connected to internet.");
-                        }
-                    }
-                }
-            } else {
-                alert("Invalid Access. Please check username and password.");
-            }
-        }
-
-        async function renderAdminDashboard(container) {
-            container.innerHTML = '<div class="loader"></div>'; // Show loader immediately
-
-            try {
-                // Fetch Orders - Removed orderBy to prevent index errors
-                const snaps = await db.collection('orders').limit(50).get();
-                const orders = snaps.docs.map(d => d.data());
-                orders.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)); // Client-side sort
-
-                container.innerHTML = `
-                    <div class="container mt-2 fade-in">
-                        <div class="flex-between">
-                            <h1>Admin Dashboard</h1>
-                            <div>
-                                 <span class="badge" style="font-size: 1rem; margin-right: 10px;">Shop is ${State.shopStatus.toUpperCase()}</span>
-                                 <button class="btn btn-sm btn-secondary" onclick="toggleShopStatus()">Toggle Status</button>
-                                 <button class="btn btn-sm btn-primary" onclick="logout()" style="margin-left: 10px; background: red;">Logout</button>
-                            </div>
-                        </div>
-                        
-                        <div class="grid mt-2" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;"> <!-- Responsive grid -->
-                            <div>
-                                <h3>Active Orders</h3>
-                                ${orders.length === 0 ? '<p>No orders yet.</p>' : orders.map(o => `
-                                    <div class="card mt-1" style="padding: 15px; border-left: 5px solid ${o.status === 'Pending' ? 'orange' : (o.status === 'Completed' ? 'green' : 'blue')}">
-                                        <div class="flex-between">
-                                            <h4>${o.orderId}</h4>
-                                            <select onchange="updateOrderStatus('${o.orderId}', this.value)" style="width: auto; padding: 5px;">
-                                                <option ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                                <option ${o.status === 'Ready' ? 'selected' : ''}>Ready</option>
-                                                <option ${o.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                            </select>
+                    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                        <!-- Cart Section -->
+                        <div>
+                            <div class="card">
+                                <h3>🛒 Your Cart (${app.cart.reduce((a,b)=>a+b.qty,0)} Items)</h3>
+                                ${app.cart.length === 0 ? '<p>Cart is empty</p>' : `
+                                    <div class="mt-2">
+                                        ${app.cart.map((item, idx) => `
+                                            <div class="flex-between" style="border-bottom:1px solid #eee; padding:10px 0;">
+                                                <div>
+                                                    <strong>${item.name}</strong><br>
+                                                    <small>${item.unitText}</small>
+                                                </div>
+                                                <div class="flex">
+                                                    <button class="btn btn-sm" onclick="app.cart[${idx}].qty++; app.saveCart(); app.updateCartCount(); app.navigate('dashboard')">+</button>
+                                                    <span style="margin:0 10px">${item.qty}</span>
+                                                    <button class="btn btn-sm" onclick="if(app.cart[${idx}].qty>1) app.cart[${idx}].qty--; else app.cart.splice(${idx},1); app.saveCart(); app.updateCartCount(); app.navigate('dashboard')">-</button>
+                                                </div>
+                                                <div>₹${item.price * item.qty}</div>
+                                            </div>
+                                        `).join('')}
+                                        
+                                        <div class="flex-between mt-2">
+                                            <h3>Total:</h3>
+                                            <h3>₹${app.cart.reduce((s,i)=>s+(i.price*i.qty),0)}</h3>
                                         </div>
-                                        <p><strong>${o.customerName}</strong> (${o.customerMobile})</p>
-                                        <p>${o.orderType.toUpperCase()} - ${o.deliveryAddress}</p>
-                                        <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; font-size: 0.9rem;">
-                                            ${o.items.map(i => `<div>${i.quantity} x ${i.name} (${i.selectedUnit})</div>`).join('')}
-                                        </div>
-                                        <p class="text-primary" style="font-weight: bold;">Total: ₹${o.totalAmount}</p>
+
+                                        ${app.shopStatus === 'closed' ? '<div class="shop-closed-banner mt-2">Shop is CLOSED. Cannot place order.</div>' : `
+                                            <hr class="mt-2 mb-2">
+                                            <label>Order Type:</label>
+                                            <div class="flex mb-2">
+                                                <label class="mr-2"><input type="radio" name="orderType" value="Delivery" checked onclick="document.getElementById('addr-box').classList.remove('hidden')"> Delivery</label>
+                                                <label style="margin-left:15px"><input type="radio" name="orderType" value="Takeaway" onclick="document.getElementById('addr-box').classList.add('hidden')"> Takeaway</label>
+                                            </div>
+                                            
+                                            <div id="addr-box">
+                                                <textarea id="delivery-addr" placeholder="Full Delivery Address" rows="3"></textarea>
+                                            </div>
+                                            
+                                            <button class="btn btn-primary btn-block mt-2" onclick="app.placeOrder()">Place Order ✅</button>
+                                        `}
                                     </div>
-                                `).join('')}
+                                `}
+                            </div>
+                        </div>
+
+                        <!-- History Section -->
+                        <div>
+                             <div class="card">
+                                <h3>📦 Order History</h3>
+                                <button class="btn btn-sm btn-secondary mb-2" onclick="components.loadUserOrders()">Refresh Orders</button>
+                                <div id="user-orders-list"><span class="spinner"></span> Loading history...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            adminLogin: () => `
+                 <div class="container" style="max-width:400px; margin-top:40px;">
+                    <div class="card" style="border-top: 5px solid red;">
+                        <h2 class="text-center text-red">Admin Panel</h2>
+                        <form onsubmit="app.loginAdmin(event)">
+                            <input type="text" id="admin-u" placeholder="Admin Username" required>
+                            <div class="password-wrapper">
+                                <input type="password" id="admin-p" placeholder="Password" required>
+                                <span class="password-toggle" onclick="app.togglePass('admin-p')">👁️</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" style="background:var(--text)">Access Dashboard</button>
+                        </form>
+                    </div>
+                </div>
+            `,
+
+            adminDashboard: () => `
+                <div class="container">
+                    <div class="flex-between mb-2">
+                        <h1>Admin Dashboard</h1>
+                        <div>
+                            <span class="badge ${app.shopStatus==='open'?'bg-completed':'bg-pending'}" style="font-size:1rem; margin-right:10px;">
+                                SHOP IS ${app.shopStatus.toUpperCase()}
+                            </span>
+                            <button class="btn btn-secondary" onclick="app.toggleShop()">Toggle Open/Close</button>
+                            <button class="btn btn-secondary" onclick="sessionStorage.clear(); app.navigate('home')">Logout</button>
+                        </div>
+                    </div>
+
+                    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+                        <!-- ORDERS SECTION -->
+                        <div>
+                            <h3>Active Orders</h3>
+                            <button class="btn btn-sm btn-secondary mb-2" onclick="app.loadAdminData()">Refresh</button>
+                            <div id="admin-orders">Loading...</div>
+                        </div>
+                        
+                        <!-- PRODUCTS SECTION -->
+                        <div>
+                            <div class="card mb-2" id="admin-product-form">
+                                <h3 id="product-form-title">Add New Product</h3>
+                                <form onsubmit="app.handleProductSubmit(event)">
+                                    <input id="p-name" placeholder="Product Name" required>
+                                    <select id="p-cat">
+                                        <option>Dals</option><option>Rice</option><option>Oils</option><option>Spices</option><option>Grocery</option>
+                                    </select>
+                                    <input id="p-price" type="number" placeholder="Base Price" required>
+                                    <select id="p-unit">
+                                        <option value="kg">Per Kg</option>
+                                        <option value="liter">Per Liter</option>
+                                        <option value="packet">Per Packet</option>
+                                    </select>
+                                    <input id="p-img" placeholder="Image URL" required>
+                                    <button class="btn btn-primary btn-block" id="submit-product-btn">Add Product</button>
+                                    <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="app.navigate('admin-dashboard'); app.editingId=null;">Cancel</button>
+                                </form>
                             </div>
                             
-                            <div>
-                                <h3>Actions</h3>
-                                <button class="btn btn-secondary btn-block mt-1" onclick="alert('Product management available in v2')">Manage Products</button>
-                                <div class="card mt-2 p-2">
-                                    <h4>Analytics</h4>
-                                    <p>Total Orders: ${orders.length}</p>
-                                    <p>Revenue: ₹${orders.reduce((s, o) => s + o.totalAmount, 0)}</p>
-                                </div>
+                            <div class="card">
+                                <h3>Manage Products</h3>
+                                <div id="admin-products-list">Loading products...</div>
                             </div>
                         </div>
                     </div>
-                `;
-            } catch (e) {
-                console.error("Admin Dash Error:", e);
-                container.innerHTML = `<div class="container mt-2 text-center"><h3>Error loading dashboard. Check console.</h3><button class="btn btn-primary" onclick="location.reload()">Retry</button></div>`;
+                </div>
+            `
+        };
+
+        // --- 4. COMPONENTS & HELPERS ---
+        const components = {
+            productCard: (p) => `
+                <div class="card" data-pid="${p.id}">
+                    <img src="${p.image}" class="product-img">
+                    <h3>${p.name}</h3>
+                    <p class="text-primary font-bold">₹${p.basePrice} / ${p.unit}</p>
+                    
+                    <select class="unit-select mt-2" onchange="this.closest('.card').querySelector('.price-display').innerText = '₹' + Math.ceil(${p.basePrice} * this.value)">
+                        <option value="1">1 ${p.unit}</option>
+                        <option value="0.5">500 gm / 0.5 ${p.unit}</option>
+                        <option value="0.25">250 gm / 0.25 ${p.unit}</option>
+                    </select>
+                    
+                    <div class="flex-between mt-2 mb-2">
+                        <div class="price-display font-bold">₹${p.basePrice}</div>
+                        <div class="flex">
+                            <button class="btn btn-sm btn-secondary" onclick="this.nextElementSibling.innerText++">+</button>
+                            <span class="qty-val" style="margin:0 10px">1</span>
+                            <button class="btn btn-sm btn-secondary" onclick="if(this.previousElementSibling.innerText>1) this.previousElementSibling.innerText--">-</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block" onclick="app.addToCart('${p.id}')">Add to Cart</button>
+                </div>
+            `,
+
+            loadUserOrders: async () => {
+                const div = document.getElementById('user-orders-list');
+                if(!div || !app.user) return;
+                try {
+                    const snap = await db.collection('orders').where('uid', '==', app.user.uid).limit(10).get();
+                    if(snap.empty) { div.innerHTML = "No orders yet."; return; }
+                    const orders = snap.docs.map(d => d.data()).sort((a,b) => b.orderId.localeCompare(a.orderId));
+                    div.innerHTML = orders.map(o => `
+                        <div class="card mb-2 p-2" style="padding:10px;">
+                            <div class="flex-between">
+                                <strong>${o.orderId}</strong>
+                                <span class="badge bg-${o.status.toLowerCase()}">${o.status}</span>
+                            </div>
+                            <small>${o.type}</small>
+                            <div class="text-primary font-bold mt-1">Total: ₹${o.total}</div>
+                        </div>
+                    `).join('');
+                } catch (e) { div.innerHTML = "Error loading history."; }
             }
-        }
+        };
 
-        async function updateOrderStatus(oid, status) {
-            await db.collection('orders').doc(oid).update({ status });
-            showToast("Order status updated");
-        }
-
-        async function toggleShopStatus() {
-            const newStatus = State.shopStatus === 'open' ? 'closed' : 'open';
-            await db.collection('settings').doc('shop_status').set({ shopStatus: newStatus });
-            State.shopStatus = newStatus;
-            navigate('admin-dashboard');
-            showToast(`Shop is now ${newStatus.toUpperCase()}`);
-        }
-
-        function attachEventHandlers() {
-            // Helper to re-attach any dynamic listeners if needed.
-            // Currently using inline onclicks for simplicity in SPA architecture.
-        }
-
-        // --- INIT ---
-        document.addEventListener('DOMContentLoaded', initApp);
-
+        // Start App
+        document.addEventListener('DOMContentLoaded', app.init);
     </script>
 </body>
-
 </html>
+```
+
+---
+
+### **Step 2: Update Firebase Rules (CRITICAL)**
+If you do not do this step, you will continue seeing the **"Missing or insufficient permissions"** error in the Admin Panel.
+
+1.  Go to the **[Firebase Console](https://console.firebase.google.com/)**.
+2.  Click on your project: **arihant-provision-stores**.
+3.  On the left menu, click **Firestore Database**.
+4.  Click the **Rules** tab (at the top).
+5.  **Delete everything** inside the editor and paste this code:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ALLOW EVERYTHING for now to fix your permission errors
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
