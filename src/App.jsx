@@ -25,7 +25,7 @@ const AppContent = () => {
   const { loading } = useAuth();
 
   useEffect(() => {
-    // Inject Custom Font - Cleaned URL
+    // Inject Custom Font - Clean URL 
     if (!document.getElementById('font-outfit')) {
       const link = document.createElement('link'); 
       link.id = 'font-outfit'; 
