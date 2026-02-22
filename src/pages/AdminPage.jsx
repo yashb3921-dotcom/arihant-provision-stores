@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2 } from 'lucide-react';
+import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, ArrowUpRight } from 'lucide-react';
 import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext';
-import { supabase, CATEGORIES, ORDER_STATUSES } from '../config/supabase';
+import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase';
 
 const AdminPage = () => {
   const { isAdmin } = useAuth();
@@ -20,90 +20,183 @@ const AdminPage = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {
-      name: formData.get('name'), price: parseFloat(formData.get('price')), discount_percent: parseInt(formData.get('discount') || 0),
-      category: formData.get('category'), unit: formData.get('unit'), image: formData.get('image') || '[https://placehold.co/400?text=Product](https://placehold.co/400?text=Product)'
+      name: formData.get('name'), 
+      price: parseFloat(formData.get('price')), 
+      // Ensure discount is saved as integer
+      discount_percent: parseInt(formData.get('discount') || 0),
+      category: formData.get('category'), 
+      unit: formData.get('unit'), 
+      image: formData.get('image') || '[https://placehold.co/400?text=Product](https://placehold.co/400?text=Product)'
     };
     const { error } = editingProduct?.id ? await supabase.from('products').update(data).eq('id', editingProduct.id) : await supabase.from('products').insert([data]);
-    if (!error) { setEditingProduct(null); e.target.reset(); fetchProducts(); }
+    if (!error) { setEditingProduct(null); e.target.reset(); fetchProducts(); } else { alert(error.message); }
   };
 
   return (
-    <div className="py-12 space-y-10 animate-in slide-in-from-bottom-8 duration-500">
-      <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div>
-            <div className="flex items-center gap-3 mb-2"><LayoutDashboard className="text-orange-500" /><span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Control Center</span></div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Admin Dashboard</h2>
+    <div className="py-12 space-y-8 animate-fade-in-up">
+      
+      {/* Admin Header */}
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-8 sm:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
+        <div className="relative z-10 text-center md:text-left">
+          <div className="inline-flex items-center gap-2 mb-3 bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
+              <LayoutDashboard size={14} className="text-orange-400" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">Command Center</span>
           </div>
-          <div className="flex gap-4">
-            <button onClick={toggleShopStatus} className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black tracking-wider uppercase transition-all ${isShopOpen ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>{isShopOpen ? <CheckCircle size={16}/> : <X size={16}/>} {isShopOpen ? 'Store Open' : 'Store Closed'}</button>
-            <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-white text-slate-900 px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-orange-500 hover:text-white transition-all shadow-sm"><Plus size={18}/> Add Product</button>
-          </div>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight">Admin Dashboard</h2>
+        </div>
+        <div className="flex gap-4 relative z-10">
+          <button onClick={toggleShopStatus} className={`flex items-center gap-2 px-6 py-4 rounded-2xl text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 ${isShopOpen ? 'bg-green-500 hover:bg-green-400 shadow-green-500/20' : 'bg-red-500 hover:bg-red-400 shadow-red-500/20'}`}>
+              {isShopOpen ? <CheckCircle size={18}/> : <X size={18}/>} {isShopOpen ? 'Store is Open' : 'Store is Closed'}
+          </button>
+          <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-white text-slate-900 px-6 py-4 rounded-2xl font-bold text-sm flex items-center gap-2 hover:bg-orange-500 hover:text-white transition-all shadow-lg active:scale-95">
+              <Plus size={20}/> Add Product
+          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
-        {/* Active Orders */}
-        <div className="xl:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-xl overflow-hidden">
-          <div className="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
-            <h3 className="font-bold text-xl flex items-center gap-2"><Truck size={20} className="text-orange-600"/> Live Orders</h3>
-            <span className="text-[10px] font-black uppercase text-slate-400 bg-slate-100 px-2 py-1 rounded flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> Real-time</span>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        
+        {/* Active Orders Section */}
+        <div className="lg:col-span-2 glass rounded-[2.5rem] overflow-hidden flex flex-col h-[700px]">
+          <div className="p-8 border-b border-slate-200/60 flex items-center justify-between bg-white/40">
+            <div>
+                <h3 className="font-black text-2xl flex items-center gap-3 text-slate-900"><Truck className="text-orange-600" size={28}/> Live Orders</h3>
+                <p className="text-xs font-medium text-slate-500 mt-1">Manage current incoming orders</p>
+            </div>
+            <span className="text-[10px] font-black uppercase text-slate-600 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div> Real-time Sync
+            </span>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="text-[10px] font-bold uppercase text-slate-400 tracking-wider bg-slate-50/50 border-b border-slate-100">
-                <tr><th className="px-6 py-4">Order</th><th className="px-6 py-4">Customer</th><th className="px-6 py-4">Items</th><th className="px-6 py-4">Total</th><th className="px-6 py-4 text-right">Status</th></tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {orders.map(order => (
-                  <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-4"><p className="font-bold text-slate-900 text-xs">#{order.id.slice(0,6).toUpperCase()}</p><p className="text-[10px] text-slate-400 font-medium mt-0.5">{new Date(order.created_at).toLocaleDateString()}</p></td>
-                    <td className="px-6 py-4"><p className="font-bold text-slate-800 text-xs">{order.customer_name}</p><p className="text-[10px] text-slate-400">{order.customer_phone}</p></td>
-                    <td className="px-6 py-4"><p className="text-[10px] text-slate-500 font-medium line-clamp-1 w-32">{order.items.map(i => `${i.name} x${i.quantity}`).join(', ')}</p><span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded mt-1 inline-block ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}`}>{order.order_type}</span></td>
-                    <td className="px-6 py-4 font-black text-slate-900 text-sm">₹{order.total_amount}</td>
-                    <td className="px-6 py-4 text-right">
-                      <select value={order.status} onChange={(e) => updateOrderStatus(order.id, e.target.value)} className={`text-[9px] font-bold px-3 py-1.5 rounded-lg border-none outline-none cursor-pointer uppercase tracking-wider transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-700' : order.status === 'Cancelled' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`}>
+          <div className="overflow-y-auto flex-1 p-6 space-y-4 no-scrollbar">
+            {orders.map((order, index) => (
+              <div key={order.id} className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all animate-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${index * 50}ms` }}>
+                  <div className="flex justify-between items-start mb-4">
+                      <div>
+                          <p className="font-black text-slate-900 text-lg">Order #{order.id.slice(0,6).toUpperCase()}</p>
+                          <p className="text-xs font-medium text-slate-400 mt-1">{new Date(order.created_at).toLocaleString()}</p>
+                      </div>
+                      <div className="text-right">
+                          <p className="font-black text-2xl text-slate-900">₹{order.total_amount}</p>
+                          <span className={`text-[9px] font-bold uppercase px-2.5 py-1 rounded-lg mt-2 inline-block ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}`}>{order.order_type}</span>
+                      </div>
+                  </div>
+                  
+                  <div className="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100">
+                      <p className="text-sm font-bold text-slate-800 mb-1 flex items-center gap-2"><User size={14} className="text-orange-500"/> {order.customer_name}</p>
+                      <p className="text-xs font-medium text-slate-500 mb-3">{order.customer_phone}</p>
+                      <div className="text-xs text-slate-600 font-medium leading-relaxed bg-white p-3 rounded-xl shadow-sm border border-slate-100">
+                          {order.items.map(i => `${i.name} (${i.quantity})`).join(', ')}
+                      </div>
+                  </div>
+                  
+                  <div className="flex justify-end border-t border-slate-100 pt-4">
+                    <select 
+                        value={order.status} 
+                        onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
+                        className={`text-xs font-bold px-4 py-2.5 rounded-xl border-none outline-none cursor-pointer uppercase tracking-wider transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800 focus:ring-green-400' : order.status === 'Cancelled' ? 'bg-red-100 text-red-800 focus:ring-red-400' : 'bg-orange-100 text-orange-800 focus:ring-orange-400'} ring-2 ring-transparent`}
+                    >
                         {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {orders.length === 0 && <div className="p-20 text-center text-slate-300 font-bold uppercase tracking-widest text-xs">No Active Orders</div>}
+                    </select>
+                  </div>
+              </div>
+            ))}
+            {orders.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center text-slate-300 opacity-60">
+                    <Truck size={64} className="mb-4 text-slate-200" />
+                    <p className="font-bold text-xl">No active orders</p>
+                </div>
+            )}
           </div>
         </div>
 
-        {/* Product Editor & Inventory */}
-        <div className="space-y-6">
+        {/* Inventory & Editor Section */}
+        <div className="space-y-6 h-[700px] flex flex-col">
+          
+          {/* Product Form - Highly visible Discount Field */}
           {editingProduct && (
-            <div className="bg-white p-8 rounded-[2rem] border border-orange-200 shadow-xl relative animate-in slide-in-from-right">
-              <button onClick={() => setEditingProduct(null)} className="absolute top-6 right-6 text-slate-300 hover:text-red-500"><X size={20}/></button>
-              <h3 className="font-bold text-lg mb-6">{editingProduct.id ? 'Edit Item' : 'New Item'}</h3>
+            <div className="glass p-8 rounded-[2.5rem] border border-orange-200 shadow-2xl relative animate-in slide-in-from-right duration-300 z-20">
+              <button onClick={() => setEditingProduct(null)} className="absolute top-6 right-6 text-slate-400 hover:text-red-500 hover:rotate-90 transition-all bg-white p-2 rounded-full shadow-sm"><X size={18}/></button>
+              <h3 className="font-black text-2xl mb-6 text-slate-900">{editingProduct.id ? 'Edit Product' : 'Create Product'}</h3>
+              
               <form onSubmit={handleSave} className="space-y-4">
-                <input name="name" defaultValue={editingProduct.name} placeholder="Product Name" required className="w-full p-3 bg-slate-50 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-200" />
-                <div className="grid grid-cols-2 gap-3"><input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="Price" required className="w-full p-3 bg-slate-50 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-200" /><input name="discount" defaultValue={editingProduct.discount_percent} type="number" placeholder="Disc %" className="w-full p-3 bg-slate-50 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-200" /></div>
-                <div className="grid grid-cols-2 gap-3"><select name="category" defaultValue={editingProduct.category || 'Essentials'} className="w-full p-3 bg-slate-50 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-200">{CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}</select><input name="unit" defaultValue={editingProduct.unit} placeholder="Unit (e.g. 1 kg)" required className="w-full p-3 bg-slate-50 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-200" /></div>
-                <input name="image" defaultValue={editingProduct.image} placeholder="Image URL" className="w-full p-3 bg-slate-50 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-200" />
-                <button className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-orange-600 transition-all flex items-center justify-center gap-2 shadow-md"><Save size={16}/> Save to Database</button>
+                <div>
+                    <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Product Name</label>
+                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-1 w-full p-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all" />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Base Price (₹)</label>
+                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-1 w-full p-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-black outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all" />
+                    </div>
+                    {/* Emphasized Discount Field */}
+                    <div>
+                        <label className="text-[10px] font-bold text-orange-600 ml-2 uppercase tracking-widest flex items-center gap-1"><Tag size={10}/> Discount %</label>
+                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-1 w-full p-3.5 bg-orange-50 border border-orange-200 rounded-2xl text-sm font-black text-orange-600 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-orange-300" />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Category</label>
+                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-1 w-full p-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all">
+                            {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Unit</label>
+                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-1 w-full p-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all" />
+                    </div>
+                </div>
+
+                <div>
+                    <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Image URL</label>
+                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-1 w-full p-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all" />
+                </div>
+                
+                <button className="w-full bg-gradient-to-r from-slate-900 to-slate-800 text-white py-4 rounded-2xl font-bold text-sm hover:from-orange-600 hover:to-amber-500 transition-all duration-300 flex items-center justify-center gap-2 shadow-xl hover:shadow-orange-500/30 active:scale-[0.98] mt-2">
+                    <Save size={18}/> Save Product to Store
+                </button>
               </form>
             </div>
           )}
-          <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-lg no-scrollbar" style={{ maxHeight: '500px', overflowY: 'auto' }}>
-            <h4 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-4">Inventory ({products.length})</h4>
-            <div className="space-y-3">
-              {products.map(p => (
-                <div key={p.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl group hover:bg-white hover:shadow-md transition-all border border-transparent hover:border-slate-100">
-                  <div className="flex items-center gap-3"><img src={p.image} className="w-10 h-10 rounded-lg object-cover bg-white shadow-sm" alt="Asset" onError={(e) => e.target.src='[https://placehold.co/100](https://placehold.co/100)'} /><div className="pr-2"><p className="text-xs font-bold text-slate-800 line-clamp-1">{p.name}</p><p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">₹{p.price}</p></div></div>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => setEditingProduct(p)} className="p-2 bg-white text-orange-600 rounded-lg shadow-sm border border-slate-100"><Edit size={12}/></button>
-                    <button onClick={async () => { if(confirm("Delete this product?")) { await supabase.from('products').delete().eq('id', p.id); fetchProducts(); } }} className="p-2 bg-white text-red-500 rounded-lg shadow-sm border border-slate-100"><Trash2 size={12}/></button>
-                  </div>
-                </div>
-              ))}
+          
+          {/* Inventory List */}
+          <div className="glass rounded-[2.5rem] overflow-hidden flex flex-col flex-1 border border-white">
+            <div className="p-6 border-b border-slate-100 bg-white/50 flex justify-between items-center">
+                <h4 className="font-black text-lg text-slate-900">Inventory</h4>
+                <span className="bg-slate-900 text-white px-3 py-1 rounded-lg text-xs font-bold">{products.length} Items</span>
+            </div>
+            
+            <div className="overflow-y-auto p-4 space-y-2 no-scrollbar">
+              {products.map(p => {
+                  const hasDisc = p.discount_percent > 0;
+                  return (
+                    <div key={p.id} className="flex items-center justify-between p-3 bg-white rounded-2xl border border-slate-100 hover:border-orange-200 hover:shadow-md transition-all duration-300 group">
+                      <div className="flex items-center gap-4">
+                          <div className="relative">
+                            <img src={p.image} className="w-12 h-12 rounded-xl object-cover bg-slate-50" alt="Asset" onError={(e) => e.target.src='[https://placehold.co/100](https://placehold.co/100)'} />
+                            {hasDisc && <div className="absolute -top-2 -right-2 bg-red-500 text-white text-[8px] font-black w-5 h-5 flex items-center justify-center rounded-full shadow-sm animate-pulse">%</div>}
+                          </div>
+                          <div>
+                              <p className="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-orange-600 transition-colors">{p.name}</p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                  <p className="text-xs font-black text-slate-900">₹{calculateDiscount(p.price, p.discount_percent)}</p>
+                                  {hasDisc && <p className="text-[10px] text-slate-400 line-through font-semibold">₹{p.price}</p>}
+                              </div>
+                          </div>
+                      </div>
+                      <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => setEditingProduct(p)} className="p-2.5 bg-orange-50 text-orange-600 rounded-xl hover:bg-orange-500 hover:text-white transition-colors"><Edit size={14}/></button>
+                        <button onClick={async () => { if(confirm("Are you sure you want to delete this product?")) { await supabase.from('products').delete().eq('id', p.id); fetchProducts(); } }} className="p-2.5 bg-red-50 text-red-600 rounded-xl hover:bg-red-500 hover:text-white transition-colors"><Trash2 size={14}/></button>
+                      </div>
+                    </div>
+                  )
+              })}
             </div>
           </div>
+          
         </div>
       </div>
     </div>
