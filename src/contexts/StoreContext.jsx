@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { supabase, ADMIN_EMAIL, calculateDiscount } from '../config/supabase';
 
-// --- Navigation Context ---
 const NavigationContext = createContext();
 export const useNavigation = () => useContext(NavigationContext);
 export const NavigationProvider = ({ children }) => {
@@ -9,7 +8,6 @@ export const NavigationProvider = ({ children }) => {
   return <NavigationContext.Provider value={{ view, setView }}>{children}</NavigationContext.Provider>;
 };
 
-// --- Auth Context ---
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
@@ -40,7 +38,6 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={{ user, isAdmin, loading, logout }}>{children}</AuthContext.Provider>;
 };
 
-// --- Shop Context ---
 const ShopContext = createContext();
 export const useShop = () => useContext(ShopContext);
 export const ShopProvider = ({ children }) => {
@@ -76,7 +73,6 @@ export const ShopProvider = ({ children }) => {
   return <ShopContext.Provider value={{ products, isShopOpen, toggleShopStatus, fetchProducts }}>{children}</ShopContext.Provider>;
 };
 
-// --- Cart Context ---
 const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
