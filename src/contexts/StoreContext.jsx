@@ -146,7 +146,7 @@ export const CartProvider = ({ children }) => {
       setIsCartOpen(false);
       setView('success');
     }
-    return { error };
+    return { error: error?.message };
   };
 
   const updateOrderStatus = async (orderId, status) => {
