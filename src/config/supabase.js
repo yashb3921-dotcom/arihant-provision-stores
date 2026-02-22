@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Cleaned URLs - No Markdown brackets
 export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "[https://fcszshzymowhebrtrltl.supabase.co](https://fcszshzymowhebrtrltl.supabase.co)";
 export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjc3pzaHp5bW93aGVicnRybHRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MjI4MjMsImV4cCI6MjA4NjI5ODgyM30._-xnb38vx7Z5gAZeQSy-SRoU7RYGXRStT9Bi1nttzu4";
 
