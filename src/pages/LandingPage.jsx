@@ -33,10 +33,10 @@ const LandingPage = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
-          <button onClick={() => setView('shop')} className="bg-gradient-to-r from-slate-900 to-slate-800 text-white px-8 py-4.5 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-amber-500 shadow-xl hover:shadow-orange-500/25 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-95">
+          <button onClick={() => setView('shop')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-4.5 rounded-full font-bold text-lg hover:from-orange-600 hover:to-amber-600 shadow-xl hover:shadow-orange-500/40 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-95">
             Start Shopping <ChevronRight className="group-hover:translate-x-1 transition-transform" />
           </button>
-          <button onClick={() => setView('auth')} className="bg-white/80 backdrop-blur-md border-2 border-slate-200 text-slate-700 px-8 py-4.5 rounded-2xl font-bold text-lg hover:border-slate-900 hover:text-slate-900 transition-all duration-300 active:scale-95 shadow-sm">
+          <button onClick={() => setView('auth')} className="bg-white/80 backdrop-blur-md border-2 border-slate-200 text-slate-800 px-8 py-4.5 rounded-full font-bold text-lg hover:border-orange-500 hover:text-orange-600 transition-all duration-300 active:scale-95 shadow-sm hover:shadow-md">
             Sign In / Register
           </button>
         </div>
