@@ -18,7 +18,7 @@ const ProfilePage = () => {
       
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-          <button onClick={() => setView('shop')} className="p-3 bg-white border border-slate-200 rounded-2xl hover:border-orange-500 hover:text-orange-600 shadow-sm transition-all active:scale-95"><ArrowLeft size={20}/></button>
+          <button onClick={() => setView('shop')} className="p-3 bg-white border border-slate-200 rounded-full hover:border-orange-500 hover:text-orange-600 shadow-sm hover:shadow-md transition-all active:scale-95 hover:-translate-y-0.5"><ArrowLeft size={20}/></button>
           <h2 className="text-4xl font-black text-slate-900 tracking-tight">My Profile</h2>
       </div>
       
@@ -40,7 +40,7 @@ const ProfilePage = () => {
               </div>
           </div>
           
-          <button onClick={logout} className="sm:ml-auto w-full sm:w-auto p-4 bg-red-50 text-red-600 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-95 z-10">
+          <button onClick={logout} className="sm:ml-auto w-full sm:w-auto px-6 py-3.5 bg-red-50 text-red-600 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 z-10">
               <LogOut size={18}/> Sign Out
           </button>
       </div>
