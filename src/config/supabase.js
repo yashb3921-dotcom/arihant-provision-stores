@@ -9,7 +9,7 @@ export const STORE_INFO = {
   name: "Arihant Provision Stores",
   phone: "9881469046",
   address: "Behind K.K. Hospital, Markal Road, Alandi Devachi, Pune",
-  logo: "[https://i.ibb.co/wF6Rv5Jg/image.png](https://i.ibb.co/wF6Rv5Jg/image.png)"
+  logo: "[https://iili.io/qFYcn8G.png](https://iili.io/qFYcn8G.png)"
 };
 
 export const CATEGORIES = ["All", "Grains", "Spices", "Pulses", "Dairy", "Essentials", "Snacks"];
