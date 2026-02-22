@@ -95,7 +95,7 @@ const CartDrawer = () => {
               <span className="text-slate-500 font-bold uppercase tracking-wider text-xs">Total Amount</span>
               <span className="text-4xl font-black text-slate-900 tracking-tight">₹{cartTotal}</span>
             </div>
-            <button onClick={handleCheckout} disabled={loading} className="w-full bg-gradient-to-r from-slate-900 to-slate-800 text-white py-4.5 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-amber-500 transition-all duration-300 flex items-center justify-center gap-2 shadow-xl hover:shadow-orange-500/30 disabled:opacity-70 group active:scale-[0.98]">
+            <button onClick={handleCheckout} disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-xl hover:shadow-orange-500/40 disabled:opacity-70 group active:scale-[0.98]">
               {loading ? <Loader className="animate-spin" /> : <>Secure Checkout <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" /></>}
             </button>
           </div>
