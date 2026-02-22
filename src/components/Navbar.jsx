@@ -28,28 +28,28 @@ const Navbar = () => {
         <div className="flex-1 max-w-md mx-6 hidden lg:block opacity-0 pointer-events-none"></div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 sm:gap-4">
           {user ? (
             <button 
               onClick={() => setView(isAdmin ? 'admin' : 'profile')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full border transition-all duration-300 shadow-sm active:scale-95 ${isAdmin ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white border-transparent hover:shadow-lg hover:shadow-slate-900/20' : 'bg-white border-slate-200 text-slate-700 hover:border-orange-300 hover:text-orange-600'}`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full border transition-all duration-300 shadow-sm hover:-translate-y-0.5 active:scale-95 ${isAdmin ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white border-transparent hover:shadow-lg hover:shadow-slate-900/20' : 'bg-white border-slate-200 text-slate-700 hover:border-orange-400 hover:text-orange-600 hover:shadow-orange-500/10'}`}
             >
               {isAdmin ? <LayoutDashboard size={18} /> : <User size={18} />}
               <span className="text-xs font-bold hidden sm:block tracking-wide">{isAdmin ? 'Admin Panel' : 'My Account'}</span>
             </button>
           ) : (
-            <button onClick={() => setView('auth')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 transition-all duration-300 active:scale-95">
+            <button onClick={() => setView('auth')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-7 py-2.5 rounded-full font-bold text-sm hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5 transition-all duration-300 active:scale-95">
               Log In
             </button>
           )}
           
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="relative p-3 bg-white border border-slate-200 text-slate-700 rounded-full hover:border-orange-500 hover:text-orange-600 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 group"
+            className="relative p-3 bg-white border border-slate-200 text-slate-700 rounded-full hover:border-orange-400 hover:text-orange-600 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-orange-500/10 hover:-translate-y-0.5 active:scale-95 group"
           >
-            <ShoppingBag size={20} className="group-hover:scale-110 transition-transform" />
+            <ShoppingBag size={20} className="group-hover:scale-110 transition-transform duration-300" />
             {cart.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-tr from-orange-600 to-amber-500 text-white text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-white animate-bounce shadow-md">
+              <span className="absolute -top-1 -right-1 bg-gradient-to-tr from-orange-600 to-amber-500 text-white text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-white animate-bounce shadow-md">
                 {cart.reduce((a, b) => a + b.quantity, 0)}
               </span>
             )}
