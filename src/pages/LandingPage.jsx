@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChevronRight, Sparkles, ShieldCheck, Clock, HeartHandshake } from 'lucide-react';
 import { useNavigation } from '../contexts/StoreContext';
-import { STORE_INFO } from '../config/supabase';
 
 const LandingPage = () => {
   const { setView } = useNavigation();
@@ -32,11 +31,12 @@ const LandingPage = () => {
           The finest authentic spices, fresh grains, and everyday household needs delivered straight to your door with care.
         </p>
         
+        {/* UPGRADED HERO BUTTONS */}
         <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
-          <button onClick={() => setView('shop')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-4.5 rounded-full font-bold text-lg hover:from-orange-600 hover:to-amber-600 shadow-xl hover:shadow-orange-500/40 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-95">
+          <button onClick={() => setView('shop')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-9 py-4.5 rounded-full font-bold text-lg hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center gap-3 group active:scale-95">
             Start Shopping <ChevronRight className="group-hover:translate-x-1 transition-transform" />
           </button>
-          <button onClick={() => setView('auth')} className="bg-white/80 backdrop-blur-md border-2 border-slate-200 text-slate-800 px-8 py-4.5 rounded-full font-bold text-lg hover:border-orange-500 hover:text-orange-600 transition-all duration-300 active:scale-95 shadow-sm hover:shadow-md">
+          <button onClick={() => setView('auth')} className="bg-white/90 backdrop-blur-md border border-slate-200 text-slate-800 px-9 py-4.5 rounded-full font-bold text-lg hover:border-orange-300 hover:text-orange-600 transition-all duration-300 active:scale-95 shadow-sm hover:shadow-md hover:-translate-y-1">
             Sign In / Register
           </button>
         </div>
@@ -52,9 +52,9 @@ const LandingPage = () => {
 
       {/* Right Image/Graphic */}
       <div className="flex-1 hidden lg:flex justify-center items-center relative z-10 animate-in zoom-in duration-1000 delay-200">
-         <div className="relative glass p-16 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] group">
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/40 to-white/10 rounded-[3rem] pointer-events-none"></div>
-            <img src={STORE_INFO.logo} className="w-[400px] h-auto object-contain drop-shadow-2xl group-hover:scale-105 group-hover:-rotate-2 transition-all duration-700 ease-out" alt="Store Hero" />
+         <div className="relative glass p-6 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.08)] group w-full max-w-md flex justify-center border border-white/60">
+            <div className="absolute inset-0 bg-gradient-to-tr from-orange-100/40 to-white/10 rounded-[3rem] pointer-events-none"></div>
+            <img src="[https://iili.io/qFY0OjR.png](https://iili.io/qFY0OjR.png)" className="w-[100%] h-auto object-contain drop-shadow-2xl group-hover:scale-105 group-hover:-rotate-2 transition-all duration-700 ease-out relative z-10" alt="Store Hero" />
          </div>
       </div>
     </div>
