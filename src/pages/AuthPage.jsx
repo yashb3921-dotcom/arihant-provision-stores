@@ -93,7 +93,7 @@ const AuthPage = () => {
               </div>
             </div>
             
-            <button disabled={loading} className="w-full bg-gradient-to-r from-slate-900 to-slate-800 text-white py-4.5 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-amber-500 shadow-xl hover:shadow-orange-500/30 transition-all duration-300 active:scale-[0.98] mt-4 flex justify-center items-center">
+            <button disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-amber-600 shadow-xl hover:shadow-orange-500/40 transition-all duration-300 active:scale-[0.98] mt-4 flex justify-center items-center">
                 {loading ? <Loader className="animate-spin" /> : (form.isSignup ? 'Create Account' : 'Secure Login')}
             </button>
           </form>
