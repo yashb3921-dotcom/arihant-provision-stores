@@ -22,18 +22,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="flex-1 max-w-md mx-8 hidden lg:block">
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-600 transition-colors" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search grains, spices, essentials..." 
-              className="w-full bg-slate-100/70 border-2 border-transparent rounded-2xl py-3 pl-12 pr-4 focus:bg-white focus:border-orange-200 focus:shadow-md outline-none transition-all text-sm font-semibold text-slate-700"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
+        <div className="flex-1 max-w-md mx-8 hidden lg:block opacity-0 pointer-events-none"></div>
 
         <div className="flex items-center gap-3">
           {user ? (
