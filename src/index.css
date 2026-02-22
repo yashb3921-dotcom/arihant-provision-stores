@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 selection:bg-orange-200 selection:text-orange-900;
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
 /* Custom Scrollbar Hide */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -9,4 +19,13 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  @apply bg-white/70 backdrop-blur-lg border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+}
+
+.glass-nav {
+  @apply bg-white/80 backdrop-blur-xl border-b border-white/40 shadow-sm;
 }
