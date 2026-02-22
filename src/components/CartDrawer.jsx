@@ -42,7 +42,7 @@ const CartDrawer = () => {
               const itemPrice = calculateDiscount(item.price, item.discount_percent);
               return (
                 <div key={item.id} className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-orange-100 transition-all">
-                  <img src={item.image} className="w-20 h-20 rounded-xl object-cover bg-white" alt={item.name} />
+                  <img src={item.image} className="w-20 h-20 rounded-xl object-cover bg-white" alt={item.name} onError={(e) => e.target.src='[https://placehold.co/400?text=Product](https://placehold.co/400?text=Product)'} />
                   <div className="flex-1 flex flex-col justify-between">
                     <div className="flex justify-between items-start">
                       <h4 className="font-bold text-slate-800 text-sm line-clamp-1">{item.name}</h4>
@@ -77,5 +77,5 @@ const CartDrawer = () => {
     </div>
   );
 };
-
+export default CartDrawer;
 export default CartDrawer;
