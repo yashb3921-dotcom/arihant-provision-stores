@@ -77,5 +77,5 @@ const CartDrawer = () => {
     </div>
   );
 };
-export default CartDrawer;
+
 export default CartDrawer;
