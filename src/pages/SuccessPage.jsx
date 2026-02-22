@@ -6,7 +6,6 @@ const SuccessPage = () => {
   const { lastOrder } = useCart();
   const { setView } = useNavigation();
 
-  // Redirect if accessed randomly
   useEffect(() => {
       if(!lastOrder) setView('shop');
   }, [lastOrder, setView]);
@@ -16,7 +15,6 @@ const SuccessPage = () => {
   return (
     <div className="h-[85vh] flex flex-col items-center justify-center p-6 relative overflow-hidden">
       
-      {/* Celebration Backgrounds */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-[500px] bg-green-200/40 rounded-full blur-[100px] -z-10 animate-pulse"></div>
 
       <div className="animate-in zoom-in-75 duration-700 flex flex-col items-center w-full max-w-md">
@@ -45,7 +43,7 @@ const SuccessPage = () => {
             </div>
           </div>
           
-          <button onClick={() => setView('shop')} className="w-full bg-slate-900 text-white py-4.5 rounded-2xl font-bold text-lg hover:bg-orange-600 shadow-xl hover:shadow-orange-500/30 transition-all duration-300 flex justify-center items-center gap-2 group active:scale-95 animate-in fade-in duration-1000 delay-500">
+          <button onClick={() => setView('shop')} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-full font-bold text-lg hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-orange-500/40 hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group active:scale-95 animate-in fade-in duration-1000 delay-500">
               Continue Shopping <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform"/>
           </button>
       </div>
