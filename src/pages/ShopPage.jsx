@@ -68,7 +68,7 @@ const ShopPage = () => {
               )}
               
               {/* Image Box */}
-              <div className="relative aspect-square overflow-hidden bg-slate-100/50 p-4">
+              <div className="relative aspect-square overflow-hidden bg-slate-100/50 p-4 flex items-center justify-center">
                 <img 
                     src={product.image} 
                     className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out drop-shadow-md" 
