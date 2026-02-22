@@ -16,8 +16,6 @@ const AuthPage = () => {
     let emailToUse = form.identifier.trim();
     const isPhone = /^\d{10}$/.test(emailToUse);
     
-    // Logic: If it's 10 digits, log them in as a regular user via mocked email.
-    // If they type an email (like the admin email), let it pass through to Supabase.
     if (isPhone) {
         emailToUse = `${emailToUse}@arihant.com`;
     } else if (!emailToUse.includes('@')) {
@@ -54,7 +52,7 @@ const AuthPage = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-orange-200/40 to-rose-200/40 rounded-full blur-[120px] -z-10 animate-pulse"></div>
 
       <div className="w-full max-w-md animate-fade-in-up">
-        <div className="glass p-10 sm:p-12 rounded-[3rem]">
+        <div className="glass p-10 sm:p-12 rounded-[3rem] border border-white shadow-2xl">
           
           <div className="w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-orange-500/30">
             <Shield size={32} />
@@ -69,7 +67,7 @@ const AuthPage = () => {
                 <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Full Name</label>
                 <div className="relative group">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={18} />
-                    <input type="text" placeholder="e.g. Rahul Sharma" required className="w-full p-4 pl-12 bg-white/50 border border-slate-200 rounded-2xl font-semibold outline-none focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all placeholder:text-slate-400" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+                    <input type="text" placeholder="e.g. Rahul Sharma" required className="w-full p-4 pl-12 bg-white/70 border border-slate-200 rounded-2xl font-semibold outline-none focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all placeholder:text-slate-400 shadow-inner" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
                 </div>
               </div>
             )}
@@ -78,7 +76,7 @@ const AuthPage = () => {
               <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Mobile Number or Admin Email</label>
               <div className="relative group">
                 <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={18} />
-                <input type="text" placeholder="e.g. 9876543210" required className="w-full p-4 pl-12 bg-white/50 border border-slate-200 rounded-2xl font-semibold outline-none focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all placeholder:text-slate-400" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})} />
+                <input type="text" placeholder="e.g. 9876543210" required className="w-full p-4 pl-12 bg-white/70 border border-slate-200 rounded-2xl font-semibold outline-none focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all placeholder:text-slate-400 shadow-inner" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})} />
               </div>
             </div>
             
@@ -86,14 +84,14 @@ const AuthPage = () => {
               <label className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">Password</label>
               <div className="relative group">
                 <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={18} />
-                <input type={showPassword ? "text" : "password"} placeholder="••••••••" required className="w-full p-4 pl-12 pr-12 bg-white/50 border border-slate-200 rounded-2xl font-semibold outline-none focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all placeholder:text-slate-400" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
+                <input type={showPassword ? "text" : "password"} placeholder="••••••••" required className="w-full p-4 pl-12 pr-12 bg-white/70 border border-slate-200 rounded-2xl font-semibold outline-none focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all placeholder:text-slate-400 shadow-inner" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors p-1">
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
             
-            <button disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-amber-600 shadow-xl hover:shadow-orange-500/40 transition-all duration-300 active:scale-[0.98] mt-4 flex justify-center items-center">
+            <button disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-full font-bold text-lg hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] mt-6 flex justify-center items-center">
                 {loading ? <Loader className="animate-spin" /> : (form.isSignup ? 'Create Account' : 'Secure Login')}
             </button>
           </form>
