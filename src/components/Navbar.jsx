@@ -32,20 +32,20 @@ const Navbar = () => {
           {user ? (
             <button 
               onClick={() => setView(isAdmin ? 'admin' : 'profile')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border transition-all duration-300 shadow-sm active:scale-95 ${isAdmin ? 'bg-slate-900 text-white border-slate-900 hover:shadow-lg hover:shadow-slate-900/20' : 'bg-white border-slate-200 text-slate-700 hover:border-orange-300 hover:text-orange-600'}`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full border transition-all duration-300 shadow-sm active:scale-95 ${isAdmin ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white border-transparent hover:shadow-lg hover:shadow-slate-900/20' : 'bg-white border-slate-200 text-slate-700 hover:border-orange-300 hover:text-orange-600'}`}
             >
               {isAdmin ? <LayoutDashboard size={18} /> : <User size={18} />}
               <span className="text-xs font-bold hidden sm:block tracking-wide">{isAdmin ? 'Admin Panel' : 'My Account'}</span>
             </button>
           ) : (
-            <button onClick={() => setView('auth')} className="bg-slate-900 text-white px-6 py-2.5 rounded-2xl font-bold text-sm hover:bg-orange-600 shadow-md hover:shadow-orange-500/20 transition-all duration-300 active:scale-95">
+            <button onClick={() => setView('auth')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 transition-all duration-300 active:scale-95">
               Log In
             </button>
           )}
           
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="relative p-3 bg-white border border-slate-200 text-slate-700 rounded-2xl hover:border-orange-500 hover:text-orange-600 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 group"
+            className="relative p-3 bg-white border border-slate-200 text-slate-700 rounded-full hover:border-orange-500 hover:text-orange-600 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 group"
           >
             <ShoppingBag size={20} className="group-hover:scale-110 transition-transform" />
             {cart.length > 0 && (
