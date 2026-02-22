@@ -25,29 +25,24 @@ const AppContent = () => {
   const { loading } = useAuth();
 
   useEffect(() => {
-    // Inject global styles & font on mount
+    // Inject Custom Font - Cleaned URL
     if (!document.getElementById('font-outfit')) {
-      const link = document.createElement('link'); link.id = 'font-outfit'; link.href = '[https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap)'; link.rel = 'stylesheet';
+      const link = document.createElement('link'); 
+      link.id = 'font-outfit'; 
+      link.href = '[https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap)'; 
+      link.rel = 'stylesheet';
       document.head.appendChild(link);
-    }
-    if (!document.getElementById('style-glass')) {
-      const style = document.createElement('style'); style.id = 'style-glass';
-      style.innerHTML = `
-        body { font-family: 'Outfit', sans-serif; background-color: #F8FAFC; }
-        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `;
-      document.head.appendChild(style);
     }
   }, []);
 
   if (loading) {
     return (
       <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-50 font-sans">
-        <Loader className="animate-spin mb-4 text-orange-600" size={48} />
-        <p className="font-bold tracking-[0.3em] animate-pulse uppercase text-xs text-slate-400">Loading Store...</p>
+        <div className="relative mb-6">
+            <div className="absolute inset-0 bg-orange-400 blur-xl opacity-20 rounded-full animate-pulse"></div>
+            <Loader className="animate-spin text-orange-600 relative z-10" size={56} strokeWidth={3} />
+        </div>
+        <p className="font-bold tracking-[0.4em] animate-pulse uppercase text-[10px] text-slate-400">Connecting Core...</p>
       </div>
     );
   }
@@ -55,14 +50,19 @@ const AppContent = () => {
   return (
     <>
       {view !== 'landing' && view !== 'auth' && <Navbar />}
-      <main className="max-w-7xl mx-auto px-6 animate-in fade-in duration-500">
-        {view === 'landing' && <LandingPage />}
-        {view === 'auth' && <AuthPage />}
-        {view === 'shop' && <ShopPage />}
-        {view === 'admin' && <AdminPage />}
-        {view === 'profile' && <ProfilePage />}
-        {view === 'success' && <SuccessPage />}
-      </main>
+      
+      {/* Added global transition container */}
+      <div className="transition-all duration-500 ease-in-out">
+          <main className="max-w-7xl mx-auto px-4 sm:px-6">
+            {view === 'landing' && <LandingPage />}
+            {view === 'auth' && <AuthPage />}
+            {view === 'shop' && <ShopPage />}
+            {view === 'admin' && <AdminPage />}
+            {view === 'profile' && <ProfilePage />}
+            {view === 'success' && <SuccessPage />}
+          </main>
+      </div>
+      
       <CartDrawer />
     </>
   );
@@ -74,7 +74,7 @@ const App = () => {
       <AuthProvider>
         <ShopProvider>
           <CartProvider>
-            <div className="min-h-screen selection:bg-orange-100 selection:text-orange-900 overflow-x-hidden">
+            <div className="min-h-screen selection:bg-orange-200 selection:text-orange-900 flex flex-col">
                <AppContent />
             </div>
           </CartProvider>
