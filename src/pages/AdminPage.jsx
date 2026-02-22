@@ -95,7 +95,7 @@ const AdminPage = () => {
             <div className="space-y-3">
               {products.map(p => (
                 <div key={p.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl group hover:bg-white hover:shadow-md transition-all border border-transparent hover:border-slate-100">
-                  <div className="flex items-center gap-3"><img src={p.image} className="w-10 h-10 rounded-lg object-cover bg-white shadow-sm" alt="Asset" /><div className="pr-2"><p className="text-xs font-bold text-slate-800 line-clamp-1">{p.name}</p><p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">₹{p.price}</p></div></div>
+                  <div className="flex items-center gap-3"><img src={p.image} className="w-10 h-10 rounded-lg object-cover bg-white shadow-sm" alt="Asset" onError={(e) => e.target.src='[https://placehold.co/100](https://placehold.co/100)'} /><div className="pr-2"><p className="text-xs font-bold text-slate-800 line-clamp-1">{p.name}</p><p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">₹{p.price}</p></div></div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => setEditingProduct(p)} className="p-2 bg-white text-orange-600 rounded-lg shadow-sm border border-slate-100"><Edit size={12}/></button>
                     <button onClick={async () => { if(confirm("Delete this product?")) { await supabase.from('products').delete().eq('id', p.id); fetchProducts(); } }} className="p-2 bg-white text-red-500 rounded-lg shadow-sm border border-slate-100"><Trash2 size={12}/></button>
