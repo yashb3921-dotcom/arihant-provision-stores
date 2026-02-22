@@ -48,7 +48,7 @@ const AdminPage = () => {
           <button onClick={toggleShopStatus} className={`flex items-center gap-2 px-6 py-4 rounded-2xl text-xs font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 ${isShopOpen ? 'bg-green-500 hover:bg-green-400 shadow-green-500/20' : 'bg-red-500 hover:bg-red-400 shadow-red-500/20'}`}>
               {isShopOpen ? <CheckCircle size={18}/> : <X size={18}/>} {isShopOpen ? 'Store is Open' : 'Store is Closed'}
           </button>
-          <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-white text-slate-900 px-6 py-4 rounded-2xl font-bold text-sm flex items-center gap-2 hover:bg-orange-500 hover:text-white transition-all shadow-lg active:scale-95">
+          <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-4 rounded-2xl font-bold text-sm flex items-center gap-2 hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg shadow-orange-500/30 active:scale-95">
               <Plus size={20}/> Add Product
           </button>
         </div>
@@ -154,7 +154,7 @@ const AdminPage = () => {
                     <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-1 w-full p-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all" />
                 </div>
                 
-                <button className="w-full bg-gradient-to-r from-slate-900 to-slate-800 text-white py-4 rounded-2xl font-bold text-sm hover:from-orange-600 hover:to-amber-500 transition-all duration-300 flex items-center justify-center gap-2 shadow-xl hover:shadow-orange-500/30 active:scale-[0.98] mt-2">
+                <button className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-2xl font-bold text-sm hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-xl hover:shadow-orange-500/30 active:scale-[0.98] mt-2">
                     <Save size={18}/> Save Product to Store
                 </button>
               </form>
