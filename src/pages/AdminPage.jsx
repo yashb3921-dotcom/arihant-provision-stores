@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, ArrowUpRight } from 'lucide-react';
+import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, User } from 'lucide-react';
 import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext';
 import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase';
 
@@ -22,11 +22,10 @@ const AdminPage = () => {
     const data = {
       name: formData.get('name'), 
       price: parseFloat(formData.get('price')), 
-      // Ensure discount is saved as integer
       discount_percent: parseInt(formData.get('discount') || 0),
       category: formData.get('category'), 
       unit: formData.get('unit'), 
-      image: formData.get('image') || '[https://placehold.co/400?text=Product](https://placehold.co/400?text=Product)'
+      image: formData.get('image') || '[https://placehold.co/400x400/f8fafc/94a3b8?text=Product](https://placehold.co/400x400/f8fafc/94a3b8?text=Product)'
     };
     const { error } = editingProduct?.id ? await supabase.from('products').update(data).eq('id', editingProduct.id) : await supabase.from('products').insert([data]);
     if (!error) { setEditingProduct(null); e.target.reset(); fetchProducts(); } else { alert(error.message); }
@@ -36,7 +35,7 @@ const AdminPage = () => {
     <div className="py-12 space-y-8 animate-fade-in-up">
       
       {/* Admin Header */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-8 sm:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
         <div className="relative z-10 text-center md:text-left">
           <div className="inline-flex items-center gap-2 mb-3 bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
@@ -59,7 +58,7 @@ const AdminPage = () => {
         
         {/* Active Orders Section */}
         <div className="lg:col-span-2 glass rounded-[2.5rem] overflow-hidden flex flex-col h-[700px]">
-          <div className="p-8 border-b border-slate-200/60 flex items-center justify-between bg-white/40">
+          <div className="p-8 border-b border-slate-200/60 flex items-center justify-between bg-white/40 backdrop-blur-md">
             <div>
                 <h3 className="font-black text-2xl flex items-center gap-3 text-slate-900"><Truck className="text-orange-600" size={28}/> Live Orders</h3>
                 <p className="text-xs font-medium text-slate-500 mt-1">Manage current incoming orders</p>
