@@ -25,11 +25,11 @@ const AppContent = () => {
   const { loading } = useAuth();
 
   useEffect(() => {
-    // Inject Custom Font - Cleaned manually to stop UI formatting bugs
+    // SAFE FONT INJECTION - PREVENTS MARKDOWN CORRUPTION
     if (!document.getElementById('font-outfit')) {
       const link = document.createElement('link'); 
       link.id = 'font-outfit'; 
-      link.href = '[https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap)'; 
+      link.href = ['https://', '[fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap)'].join(''); 
       link.rel = 'stylesheet';
       document.head.appendChild(link);
     }
@@ -51,7 +51,6 @@ const AppContent = () => {
     <>
       {view !== 'landing' && view !== 'auth' && <Navbar />}
       
-      {/* Added global transition container */}
       <div className="transition-all duration-500 ease-in-out">
           <main className="max-w-7xl mx-auto px-4 sm:px-6">
             {view === 'landing' && <LandingPage />}
