@@ -37,8 +37,10 @@ const AdminPage = () => {
         : await supabase.from('products').insert([payload]);
         
     if (error) { 
-        if (error.message.includes('discount_percent')) {
-            alert("CRITICAL ERROR: Please go to your Supabase Dashboard -> Table Editor -> 'products' table, and add a new column named 'discount_percent' (Type: int4, Default: 0).");
+        if (error.message.includes('image')) {
+            alert("DATABASE ERROR: Please go to your Supabase Dashboard -> Table Editor -> 'products' table, and add a new column named 'image' (Type: text).");
+        } else if (error.message.includes('discount_percent')) {
+            alert("DATABASE ERROR: Please go to your Supabase Dashboard -> Table Editor -> 'products' table, and add a new column named 'discount_percent' (Type: int4, Default: 0).");
         } else {
             alert("Database Error: " + error.message); 
         }
@@ -62,12 +64,12 @@ const AdminPage = () => {
           </div>
           <h2 className="text-4xl md:text-6xl font-black tracking-tight">Admin Dashboard</h2>
         </div>
-        <div className="flex gap-4 relative z-10">
-          <button onClick={toggleShopStatus} className={`flex items-center gap-2 px-7 py-4 rounded-full text-sm font-black tracking-wider uppercase transition-all shadow-lg hover:-translate-y-1 active:scale-95 ${isShopOpen ? 'bg-green-500 hover:bg-green-400 shadow-green-500/30' : 'bg-red-500 hover:bg-red-400 shadow-red-500/30'}`}>
-              {isShopOpen ? <CheckCircle size={20}/> : <X size={20}/>} {isShopOpen ? 'Store is Open' : 'Store is Closed'}
+        <div className="flex gap-4 relative z-10 w-full sm:w-auto">
+          <button onClick={toggleShopStatus} className={`flex items-center justify-center gap-2 px-7 py-4 rounded-2xl text-sm font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 flex-1 sm:flex-auto ${isShopOpen ? 'bg-green-500 hover:bg-green-400 shadow-green-500/30' : 'bg-red-500 hover:bg-red-400 shadow-red-500/30'}`}>
+              {isShopOpen ? <CheckCircle size={20}/> : <X size={20}/>} {isShopOpen ? 'Open' : 'Closed'}
           </button>
-          <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-7 py-4 rounded-full font-bold text-sm flex items-center gap-2 hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:-translate-y-1 active:scale-95 border border-orange-400">
-              <Plus size={22}/> Add Product
+          <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-7 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2 hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg shadow-orange-500/40 active:scale-95 border border-orange-400 flex-1 sm:flex-auto">
+              <Plus size={22}/> Add Item
           </button>
         </div>
       </div>
@@ -139,41 +141,43 @@ const AdminPage = () => {
               <form onSubmit={handleSave} className="space-y-5">
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Product Name</label>
-                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                    {/* FIXED INPUT PADDING FOR VISIBILITY */}
+                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Base Price (₹)</label>
-                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                     </div>
                     {/* Emphasized Discount Field */}
                     <div>
                         <label className="text-[11px] font-black text-orange-600 ml-3 uppercase tracking-widest flex items-center gap-1"><Tag size={12}/> Discount %</label>
-                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-1.5 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-base font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-inner" />
+                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-2 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-base font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-inner" />
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Category</label>
-                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner">
+                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner">
                             {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Unit</label>
-                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                     </div>
                 </div>
 
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Image URL</label>
-                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 </div>
                 
-                <button className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-full font-extrabold text-lg hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:-translate-y-1 active:scale-[0.98] mt-4 border border-orange-400">
-                    <Save size={20}/> Save Product to Store
+                {/* FIXED TALLER ADMIN SAVE BUTTON */}
+                <button className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-2xl font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 active:scale-[0.98] mt-6 border border-orange-400">
+                    <Save size={24}/> Save Product
                 </button>
               </form>
             </div>
