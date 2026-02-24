@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
-// SECURE STRING SPLITTING - GUARANTEED NOT TO BREAK
+// URL Splitting to prevent Markdown corruption
 export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || ['https://', 'fcszshzymowhebrtrltl.supabase.co'].join('');
 export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjc3pzaHp5bW93aGVicnRybHRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MjI4MjMsImV4cCI6MjA4NjI5ODgyM30._-xnb38vx7Z5gAZeQSy-SRoU7RYGXRStT9Bi1nttzu4";
 
@@ -9,8 +9,8 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 export const STORE_INFO = {
   name: "Arihant Provision Stores",
   phone: "9881469046",
-  address: "Behind K.K. Hospital, Markal Road, Alandi Devachi, Pune"
-  // Images removed as requested. Using CSS Icons instead.
+  address: "Behind K.K. Hospital, Markal Road, Alandi Devachi, Pune",
+  logo: ['https://', 'iili.io/qFYcn8G.png'].join('')
 };
 
 export const CATEGORIES = ["All", "Grains", "Spices", "Pulses", "Dairy", "Essentials", "Snacks"];
