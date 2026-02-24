@@ -65,10 +65,10 @@ const AdminPage = () => {
           <h2 className="text-4xl md:text-6xl font-black tracking-tight">Admin Dashboard</h2>
         </div>
         <div className="flex gap-4 relative z-10 w-full sm:w-auto">
-          <button onClick={toggleShopStatus} className={`flex items-center justify-center gap-2 px-7 py-4 rounded-2xl text-sm font-black tracking-wider uppercase transition-all shadow-lg active:scale-95 flex-1 sm:flex-auto ${isShopOpen ? 'bg-green-500 hover:bg-green-400 shadow-green-500/30' : 'bg-red-500 hover:bg-red-400 shadow-red-500/30'}`}>
+          <button onClick={toggleShopStatus} className={`flex items-center justify-center gap-2 px-7 py-4 rounded-full text-sm font-black tracking-wider uppercase transition-all shadow-lg hover:-translate-y-1 active:scale-95 flex-1 sm:flex-auto ${isShopOpen ? 'bg-green-500 hover:bg-green-400 shadow-green-500/30' : 'bg-red-500 hover:bg-red-400 shadow-red-500/30'}`}>
               {isShopOpen ? <CheckCircle size={20}/> : <X size={20}/>} {isShopOpen ? 'Open' : 'Closed'}
           </button>
-          <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-7 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2 hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg shadow-orange-500/40 active:scale-95 border border-orange-400 flex-1 sm:flex-auto">
+          <button onClick={() => setEditingProduct({ name: '', price: '', category: 'Essentials', unit: '1 kg', discount_percent: 0 })} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-7 py-4 rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:from-orange-600 hover:to-amber-600 transition-all shadow-lg shadow-orange-500/40 active:scale-95 border border-orange-400 flex-1 sm:flex-auto">
               <Plus size={22}/> Add Item
           </button>
         </div>
@@ -76,7 +76,7 @@ const AdminPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         
-        {/* Active Orders Section */}
+        {/* NEW ACTIVE ORDERS TABLE UI */}
         <div className="lg:col-span-2 glass rounded-[3rem] overflow-hidden flex flex-col h-[750px] border border-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.05)]">
           <div className="p-8 border-b border-slate-200/60 flex items-center justify-between bg-white/60 backdrop-blur-md">
             <div>
@@ -87,40 +87,61 @@ const AdminPage = () => {
                 <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div> Real-time Sync
             </span>
           </div>
-          <div className="overflow-y-auto flex-1 p-6 space-y-5 no-scrollbar bg-slate-50/30">
-            {orders.map((order, index) => (
-              <div key={order.id} className="bg-white border-2 border-slate-100 rounded-[2rem] p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 50}ms` }}>
-                  <div className="flex justify-between items-start mb-5">
-                      <div>
-                          <p className="font-black text-slate-900 text-xl">Order {order.order_id}</p>
-                          <p className="text-sm font-semibold text-slate-400 mt-1">{new Date(order.created_at).toLocaleString()}</p>
-                      </div>
-                      <div className="text-right">
-                          <p className="font-black text-3xl text-slate-900">₹{order.total_amount}</p>
-                          <span className={`text-[9px] font-black uppercase px-3 py-1.5 rounded-full mt-2 inline-block shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border border-blue-200' : 'bg-purple-50 text-purple-600 border border-purple-200'}`}>{order.order_type}</span>
-                      </div>
-                  </div>
-                  
-                  <div className="bg-slate-50 rounded-[1.5rem] p-5 mb-5 border border-slate-200 shadow-inner">
-                      <p className="text-base font-bold text-slate-800 mb-1 flex items-center gap-2"><User size={16} className="text-orange-500"/> {order.customer_name}</p>
-                      <p className="text-sm font-medium text-slate-500 mb-4">{order.customer_phone}</p>
-                      <div className="text-sm text-slate-700 font-semibold leading-relaxed bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                          {order.items.map(i => `${i.name} [${i.variantLabel}] x${i.quantity}`).join(' • ')}
-                      </div>
-                  </div>
-                  
-                  <div className="flex justify-end border-t-2 border-slate-100 pt-5">
-                    <select 
-                        value={order.status} 
-                        onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
-                        className={`text-sm font-black px-5 py-3 rounded-xl border-none outline-none cursor-pointer uppercase tracking-widest transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800 focus:ring-green-400' : order.status === 'Cancelled' ? 'bg-red-100 text-red-800 focus:ring-red-400' : 'bg-orange-100 text-orange-800 focus:ring-orange-400'} ring-2 ring-transparent`}
-                    >
-                        {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </div>
-              </div>
-            ))}
-            {orders.length === 0 && (
+          
+          <div className="overflow-x-auto overflow-y-auto flex-1 p-6 no-scrollbar bg-slate-50/30">
+            {orders.length > 0 ? (
+                <div className="bg-white rounded-3xl shadow-sm border border-slate-100 min-w-[800px] overflow-hidden">
+                  <table className="w-full text-left border-collapse whitespace-nowrap">
+                    <thead>
+                      <tr className="bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
+                        <th className="p-5">Order Info</th>
+                        <th className="p-5">Customer</th>
+                        <th className="p-5">Items</th>
+                        <th className="p-5">Type & Total</th>
+                        <th className="p-5 text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {orders.map((order) => (
+                        <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
+                          
+                          <td className="p-5">
+                            <p className="font-bold text-slate-900 text-sm">{order.order_id}</p>
+                            <p className="text-xs text-slate-400 font-medium mt-1">{new Date(order.created_at).toLocaleString()}</p>
+                          </td>
+                          
+                          <td className="p-5">
+                            <p className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><User size={14} className="text-orange-500"/> {order.customer_name}</p>
+                            <p className="text-xs text-slate-500 font-medium mt-1">{order.customer_phone}</p>
+                          </td>
+                          
+                          <td className="p-5">
+                             <div className="text-xs text-slate-600 font-medium leading-relaxed max-w-[200px] whitespace-normal line-clamp-2">
+                                {order.items.map(i => `${i.name} [${i.variantLabel}] x${i.quantity}`).join(', ')}
+                             </div>
+                          </td>
+                          
+                          <td className="p-5">
+                             <p className="font-black text-slate-900 text-lg">₹{order.total_amount}</p>
+                             <span className={`text-[9px] font-black uppercase px-2.5 py-1 rounded-md mt-1 inline-block border ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
+                          </td>
+                          
+                          <td className="p-5 text-right">
+                             <select 
+                                value={order.status} 
+                                onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
+                                className={`text-xs font-bold px-4 py-2.5 rounded-xl border-none outline-none cursor-pointer uppercase tracking-widest transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800 focus:ring-green-400' : order.status === 'Cancelled' ? 'bg-red-100 text-red-800 focus:ring-red-400' : 'bg-orange-100 text-orange-800 focus:ring-orange-400'} ring-2 ring-transparent`}
+                            >
+                                {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
+                          </td>
+
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+            ) : (
                 <div className="h-full flex flex-col items-center justify-center text-slate-300 opacity-60">
                     <Truck size={80} className="mb-4 text-slate-200" />
                     <p className="font-black text-2xl">No active orders</p>
