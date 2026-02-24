@@ -16,6 +16,8 @@ const AuthPage = () => {
     let emailToUse = form.identifier.trim();
     const isPhone = /^\d{10}$/.test(emailToUse);
     
+    // Logic: If it's 10 digits, log them in as a regular user via mocked email.
+    // If they type an email (like the admin email), let it pass through to Supabase.
     if (isPhone) {
         emailToUse = `${emailToUse}@arihant.com`;
     } else if (!emailToUse.includes('@')) {
@@ -47,10 +49,12 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      
+      {/* Aesthetic Backgrounds */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-orange-200/60 to-rose-200/60 rounded-full blur-[120px] -z-10 animate-pulse"></div>
 
       <div className="w-full max-w-md animate-fade-in-up">
-        <div className="glass p-8 sm:p-12 rounded-[3rem] border border-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+        <div className="glass p-10 sm:p-12 rounded-[3rem] border border-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
           
           <div className="w-20 h-20 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-3xl flex items-center justify-center text-white mb-8 shadow-xl shadow-orange-500/40 border border-orange-300">
             <Shield size={36} strokeWidth={2.5} />
@@ -65,7 +69,7 @@ const AuthPage = () => {
                 <label className="text-[11px] font-black text-slate-500 ml-2 uppercase tracking-widest">Full Name</label>
                 <div className="relative group">
                     <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
-                    <input type="text" placeholder="e.g. Rahul Sharma" required className="w-full py-5 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+                    <input type="text" placeholder="e.g. Rahul Sharma" required className="w-full p-4.5 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-lg font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
                 </div>
               </div>
             )}
@@ -74,7 +78,7 @@ const AuthPage = () => {
               <label className="text-[11px] font-black text-slate-500 ml-2 uppercase tracking-widest">Mobile Number or Admin Email</label>
               <div className="relative group">
                 <Smartphone className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
-                <input type="text" placeholder="e.g. 9876543210" required className="w-full py-5 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})} />
+                <input type="text" placeholder="e.g. 9876543210" required className="w-full p-4.5 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-lg font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})} />
               </div>
             </div>
             
@@ -82,7 +86,7 @@ const AuthPage = () => {
               <label className="text-[11px] font-black text-slate-500 ml-2 uppercase tracking-widest">Password</label>
               <div className="relative group">
                 <KeyRound className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
-                <input type={showPassword ? "text" : "password"} placeholder="••••••••" required className="w-full py-5 pl-14 pr-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
+                <input type={showPassword ? "text" : "password"} placeholder="••••••••" required className="w-full p-4.5 pl-14 pr-12 bg-white/90 border-2 border-slate-200 rounded-2xl text-lg font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 transition-colors p-1">
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
