@@ -18,6 +18,7 @@ import AuthPage from './pages/AuthPage';
 import ShopPage from './pages/ShopPage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
+import CheckoutPage from './pages/CheckoutPage'; 
 import SuccessPage from './pages/SuccessPage';
 
 const AppContent = () => {
@@ -25,7 +26,6 @@ const AppContent = () => {
   const { loading } = useAuth();
 
   useEffect(() => {
-    // SAFE FONT INJECTION - PREVENTS MARKDOWN CORRUPTION
     if (!document.getElementById('font-outfit')) {
       const link = document.createElement('link'); 
       link.id = 'font-outfit'; 
@@ -58,11 +58,12 @@ const AppContent = () => {
             {view === 'shop' && <ShopPage />}
             {view === 'admin' && <AdminPage />}
             {view === 'profile' && <ProfilePage />}
+            {view === 'checkout' && <CheckoutPage />} 
             {view === 'success' && <SuccessPage />}
           </main>
       </div>
       
-      <CartDrawer />
+      {view !== 'checkout' && <CartDrawer />}
     </>
   );
 };
