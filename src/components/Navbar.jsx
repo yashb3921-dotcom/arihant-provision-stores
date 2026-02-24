@@ -31,24 +31,24 @@ const Navbar = () => {
           {user ? (
             <button 
               onClick={() => setView(isAdmin ? 'admin' : 'profile')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full border-2 transition-all duration-300 shadow-sm hover:-translate-y-0.5 active:scale-95 ${isAdmin ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white border-transparent hover:shadow-lg hover:shadow-slate-900/20' : 'bg-white border-slate-200 text-slate-700 hover:border-orange-400 hover:text-orange-600 hover:shadow-orange-500/10'}`}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl border-2 transition-all duration-300 shadow-sm active:scale-95 ${isAdmin ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white border-transparent hover:shadow-lg hover:shadow-slate-900/20' : 'bg-white border-slate-200 text-slate-700 hover:border-orange-400 hover:text-orange-600 hover:shadow-orange-500/10'}`}
             >
-              {isAdmin ? <LayoutDashboard size={18} /> : <User size={18} />}
+              {isAdmin ? <LayoutDashboard size={20} /> : <User size={20} />}
               <span className="text-sm font-bold hidden sm:block tracking-wide">{isAdmin ? 'Admin Panel' : 'My Account'}</span>
             </button>
           ) : (
-            <button onClick={() => setView('auth')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-2.5 rounded-full font-extrabold text-sm hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5 transition-all duration-300 active:scale-95 border border-orange-400">
+            <button onClick={() => setView('auth')} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-7 py-3 rounded-2xl font-bold text-base hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 active:scale-95 border border-orange-400">
               Log In
             </button>
           )}
           
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="relative p-3.5 bg-white border-2 border-slate-200 text-slate-700 rounded-full hover:border-orange-400 hover:text-orange-600 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-orange-500/20 hover:-translate-y-0.5 active:scale-95 group"
+            className="relative p-3.5 bg-white border-2 border-slate-200 text-slate-700 rounded-2xl hover:border-orange-400 hover:text-orange-600 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-orange-500/20 active:scale-95 group"
           >
             <ShoppingBag size={22} className="group-hover:scale-110 transition-transform duration-300" />
             {cart.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-gradient-to-tr from-orange-600 to-amber-500 text-white text-[11px] font-black h-6 w-6 flex items-center justify-center rounded-full border-2 border-white shadow-md animate-bounce">
+              <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-tr from-orange-600 to-amber-500 text-white text-[11px] font-black h-6 w-6 flex items-center justify-center rounded-full border-2 border-white shadow-md animate-bounce">
                 {cart.reduce((a, b) => a + b.quantity, 0)}
               </span>
             )}
