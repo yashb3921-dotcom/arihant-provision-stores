@@ -40,7 +40,7 @@ const CartDrawer = () => {
             <div className="p-2 bg-gradient-to-tr from-orange-100 to-amber-50 rounded-xl text-orange-600 shadow-inner border border-orange-100"><ShoppingBag size={24} /></div>
             Your Cart
           </h2>
-          <button onClick={() => setIsCartOpen(false)} className="p-2.5 bg-white text-slate-500 rounded-full hover:bg-red-50 hover:text-red-600 transition-all hover:rotate-90 duration-300 border border-slate-200 shadow-sm"><X size={20}/></button>
+          <button onClick={() => setIsCartOpen(false)} className="p-2.5 bg-white text-slate-500 rounded-2xl hover:bg-red-50 hover:text-red-600 transition-all hover:rotate-90 duration-300 border border-slate-200 shadow-sm"><X size={20}/></button>
         </div>
         
         {/* Cart Items */}
@@ -57,7 +57,7 @@ const CartDrawer = () => {
               const hasDisc = item.discount_percent > 0;
               
               return (
-                <div key={item.id} className="flex gap-4 p-4 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group" style={{ animationDelay: `${index * 50}ms` }}>
+                <div key={item.id} className="flex gap-4 p-4 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group" style={{ animationDelay: `${index * 50}ms` }}>
                   <div className="w-24 h-24 rounded-2xl overflow-hidden bg-slate-50 relative shrink-0">
                     {hasDisc && <div className="absolute top-0 left-0 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[8px] font-black px-2 py-1 rounded-br-lg z-10 shadow-sm">{item.discount_percent}% OFF</div>}
                     <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={item.name} onError={(e) => e.target.src=['https://', 'placehold.co/400x400/f8fafc/94a3b8?text=Item'].join('')} />
@@ -75,10 +75,10 @@ const CartDrawer = () => {
 
                     <div className="flex items-center justify-between mt-auto pt-2">
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">{item.unit}</p>
-                      <div className="flex items-center bg-slate-50 rounded-full p-1 border border-slate-200 shadow-inner">
-                        <button onClick={() => updateCartQuantity(item, -1)} className="p-1.5 text-slate-500 hover:text-orange-600 hover:bg-white rounded-full transition-all active:scale-90 shadow-sm"><Minus size={14}/></button>
+                      <div className="flex items-center bg-slate-50 rounded-2xl p-1 border border-slate-200 shadow-inner">
+                        <button onClick={() => updateCartQuantity(item, -1)} className="p-1.5 text-slate-500 hover:text-orange-600 hover:bg-white rounded-xl transition-all active:scale-90 shadow-sm"><Minus size={16}/></button>
                         <span className="w-8 text-center font-black text-sm text-slate-800">{item.quantity}</span>
-                        <button onClick={() => updateCartQuantity(item, 1)} className="p-1.5 text-slate-500 hover:text-orange-600 hover:bg-white rounded-full transition-all active:scale-90 shadow-sm"><Plus size={14}/></button>
+                        <button onClick={() => updateCartQuantity(item, 1)} className="p-1.5 text-slate-500 hover:text-orange-600 hover:bg-white rounded-xl transition-all active:scale-90 shadow-sm"><Plus size={16}/></button>
                       </div>
                     </div>
                   </div>
@@ -95,7 +95,7 @@ const CartDrawer = () => {
               <span className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-1.5">Total Amount</span>
               <span className="text-4xl font-black text-slate-900 tracking-tight">₹{cartTotal}</span>
             </div>
-            <button onClick={handleCheckout} disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-5 rounded-full font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:-translate-y-1 disabled:opacity-70 group active:scale-[0.98]">
+            <button onClick={handleCheckout} disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-5 rounded-2xl font-bold text-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 active:scale-[0.98]">
               {loading ? <Loader className="animate-spin" /> : <>Secure Checkout <ChevronRight size={24} className="group-hover:translate-x-2 transition-transform" /></>}
             </button>
           </div>
