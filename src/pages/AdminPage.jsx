@@ -93,12 +93,12 @@ const AdminPage = () => {
                 <div className="bg-white rounded-3xl shadow-sm border border-slate-100 min-w-[800px] overflow-hidden">
                   <table className="w-full text-left border-collapse whitespace-nowrap">
                     <thead>
-                      <tr className="bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
-                        <th className="p-5">Order Info</th>
-                        <th className="p-5">Customer</th>
-                        <th className="p-5">Items</th>
-                        <th className="p-5">Type & Total</th>
-                        <th className="p-5 text-right">Status</th>
+                      <tr className="bg-slate-50 text-[11px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-200">
+                        <th className="p-5">Order ID & Date</th>
+                        <th className="p-5">Customer Info</th>
+                        <th className="p-5">Items List</th>
+                        <th className="p-5">Total Amount</th>
+                        <th className="p-5 text-right">Update Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -106,31 +106,31 @@ const AdminPage = () => {
                         <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
                           
                           <td className="p-5">
-                            <p className="font-bold text-slate-900 text-sm">{order.order_id}</p>
+                            <p className="font-black text-slate-900 text-sm">{order.order_id}</p>
                             <p className="text-xs text-slate-400 font-medium mt-1">{new Date(order.created_at).toLocaleString()}</p>
                           </td>
                           
                           <td className="p-5">
                             <p className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><User size={14} className="text-orange-500"/> {order.customer_name}</p>
-                            <p className="text-xs text-slate-500 font-medium mt-1">{order.customer_phone}</p>
+                            <p className="text-xs text-slate-500 font-bold mt-1.5">{order.customer_phone}</p>
                           </td>
                           
                           <td className="p-5">
-                             <div className="text-xs text-slate-600 font-medium leading-relaxed max-w-[200px] whitespace-normal line-clamp-2">
-                                {order.items.map(i => `${i.name} [${i.variantLabel}] x${i.quantity}`).join(', ')}
+                             <div className="text-xs text-slate-700 font-bold leading-relaxed max-w-[250px] whitespace-normal line-clamp-2">
+                                {order.items.map(i => `${i.name} [${i.variantLabel}] x${i.quantity}`).join(' • ')}
                              </div>
                           </td>
                           
                           <td className="p-5">
-                             <p className="font-black text-slate-900 text-lg">₹{order.total_amount}</p>
-                             <span className={`text-[9px] font-black uppercase px-2.5 py-1 rounded-md mt-1 inline-block border ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
+                             <p className="font-black text-slate-900 text-xl">₹{order.total_amount}</p>
+                             <span className={`text-[10px] font-black uppercase px-3 py-1.5 rounded-lg mt-1 inline-block border shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
                           </td>
                           
                           <td className="p-5 text-right">
                              <select 
                                 value={order.status} 
                                 onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
-                                className={`text-xs font-bold px-4 py-2.5 rounded-xl border-none outline-none cursor-pointer uppercase tracking-widest transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800 focus:ring-green-400' : order.status === 'Cancelled' ? 'bg-red-100 text-red-800 focus:ring-red-400' : 'bg-orange-100 text-orange-800 focus:ring-orange-400'} ring-2 ring-transparent`}
+                                className={`text-xs font-black px-4 py-3 rounded-2xl border-none outline-none cursor-pointer uppercase tracking-widest transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800 focus:ring-green-400' : order.status === 'Cancelled' ? 'bg-red-100 text-red-800 focus:ring-red-400' : 'bg-orange-100 text-orange-800 focus:ring-orange-400'} ring-2 ring-transparent`}
                             >
                                 {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                             </select>
@@ -153,7 +153,7 @@ const AdminPage = () => {
         {/* Inventory & Editor Section */}
         <div className="space-y-6 h-[750px] flex flex-col">
           
-          {/* Product Form */}
+          {/* Product Form (LARGE INPUTS INTACT) */}
           {editingProduct && (
             <div className="glass p-8 rounded-[3rem] border border-orange-200 shadow-2xl relative animate-in slide-in-from-right duration-300 z-20">
               <button onClick={() => setEditingProduct(null)} className="absolute top-6 right-6 text-slate-400 hover:text-red-500 hover:rotate-90 transition-all bg-white p-2.5 rounded-full shadow-sm border border-slate-100"><X size={20}/></button>
@@ -162,41 +162,40 @@ const AdminPage = () => {
               <form onSubmit={handleSave} className="space-y-5">
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Product Name</label>
-                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-lg font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Base Price (₹)</label>
-                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-lg font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
                     </div>
-                    {/* Emphasized Discount Field */}
                     <div>
                         <label className="text-[11px] font-black text-orange-600 ml-3 uppercase tracking-widest flex items-center gap-1"><Tag size={12}/> Discount %</label>
-                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-1.5 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-base font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-inner" />
+                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-2 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-lg font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-sm" />
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Category</label>
-                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner">
+                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm">
                             {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Unit</label>
-                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
                     </div>
                 </div>
 
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Image URL</label>
-                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
                 </div>
                 
-                <button className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-full font-extrabold text-lg hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:-translate-y-1 active:scale-[0.98] mt-4 border border-orange-400">
-                    <Save size={20}/> Save Product to Store
+                <button className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-full font-extrabold text-2xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 active:scale-[0.98] mt-8 border border-orange-400">
+                    <Save size={28}/> Save Product
                 </button>
               </form>
             </div>
