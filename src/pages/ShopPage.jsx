@@ -55,23 +55,24 @@ const ProductCard = ({ product }) => {
                 alt={product.name} 
                 onError={(e) => e.target.src=['https://', 'placehold.co/400x400/f8fafc/94a3b8?text=Image+Not+Found'].join('')} 
             />
-            <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase text-slate-700 shadow-md border border-slate-200">
-                {product.unit}
-            </div>
             </div>
             
             <div className="p-6 flex flex-col flex-1 bg-white">
-            <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-2">{product.category}</p>
-            <h3 className="font-extrabold text-slate-900 text-base leading-snug mb-4 line-clamp-2 h-12 group-hover:text-orange-600 transition-colors">{product.name}</h3>
+            <div className="flex justify-between items-start mb-2">
+               <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest">{product.category}</p>
+               <p className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">{product.unit}</p>
+            </div>
+            <h3 className="font-extrabold text-slate-900 text-base leading-snug mb-3 line-clamp-2 min-h-[2.5rem] group-hover:text-orange-600 transition-colors">{product.name}</h3>
             
             <div className="flex items-baseline gap-2 mb-4">
                 <span className="text-3xl font-black text-slate-900 tracking-tight">₹{displayPrice}</span>
                 {hasDiscount && <span className="text-sm text-slate-400 line-through font-bold decoration-2 decoration-red-400/50">₹{originalDisplayPrice}</span>}
             </div>
             
+            {/* VARIANT SELECTOR */}
             <div className="mt-auto space-y-3">
                 <div className="relative">
-                    <select value={variant} onChange={e => setVariant(e.target.value)} className="w-full appearance-none bg-slate-50 border-2 border-slate-200 rounded-2xl py-3.5 pl-4 pr-10 text-sm font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-inner">
+                    <select value={variant} onChange={e => setVariant(e.target.value)} className="w-full appearance-none bg-slate-50 border-2 border-slate-200 rounded-2xl py-3 pl-4 pr-10 text-sm font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-inner">
                         <option value="1">1 {product.unit} (Full)</option>
                         {(isWeight || isLiquid) && <option value="0.5">{isWeight ? '500 gm' : '500 ml'} (Half)</option>}
                         {(isWeight || isLiquid) && <option value="0.25">{isWeight ? '250 gm' : '250 ml'} (Quarter)</option>}
@@ -81,13 +82,13 @@ const ProductCard = ({ product }) => {
                 </div>
                 
                 {variant === 'custom' && (
-                    <input type="number" placeholder={isWeight ? "Enter grams (e.g. 150)" : "Enter amount"} value={customVal} onChange={e => setCustomVal(e.target.value)} className="w-full bg-orange-50 border-2 border-orange-200 rounded-2xl py-3.5 px-4 text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                    <input type="number" placeholder={isWeight ? "Enter grams (e.g. 150)" : "Enter amount"} value={customVal} onChange={e => setCustomVal(e.target.value)} className="w-full bg-orange-50 border-2 border-orange-200 rounded-2xl py-3 px-4 text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 )}
 
                 <button 
                     disabled={!isShopOpen || added} 
                     onClick={handleAdd} 
-                    className={`w-full text-white py-4 rounded-full font-extrabold text-sm uppercase tracking-widest transition-all duration-300 active:scale-[0.97] border min-h-[56px] ${added ? 'bg-green-500 border-green-500 shadow-lg shadow-green-500/40' : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-1 border-orange-400'} disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:border-slate-300 disabled:shadow-none`}
+                    className={`w-full text-white py-4 rounded-2xl font-extrabold text-sm uppercase tracking-widest transition-all duration-300 active:scale-[0.97] border min-h-[56px] ${added ? 'bg-green-500 border-green-500 shadow-lg shadow-green-500/40' : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-1 border-orange-400'} disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:border-slate-300 disabled:shadow-none`}
                 >
                     {added ? 'Added to Bag ✓' : 'Add To Cart'}
                 </button>
@@ -139,7 +140,7 @@ const ShopPage = () => {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-8">
         {filteredProducts.map((product, index) => (
           <ProductCard key={product.id} product={product} />
         ))}
