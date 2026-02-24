@@ -29,8 +29,8 @@ const ShopPage = () => {
         
         {/* Mobile Search */}
         <div className="w-full lg:w-auto relative group mb-2 lg:mb-0 block sm:hidden">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={18} />
-          <input type="text" placeholder="Search products..." className="w-full bg-white border-2 border-slate-200 rounded-full py-3 pl-12 pr-4 focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm font-semibold transition-all shadow-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
+          <input type="text" placeholder="Search products..." className="w-full bg-white border-2 border-slate-200 rounded-2xl p-4 pl-14 pr-4 focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 outline-none text-base font-semibold transition-all shadow-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
         
         {/* Category Pills */}
@@ -39,7 +39,7 @@ const ShopPage = () => {
             <button 
               key={cat} 
               onClick={() => setSelectedCategory(cat)} 
-              className={`whitespace-nowrap px-7 py-3 rounded-full text-sm font-extrabold transition-all duration-300 ${selectedCategory === cat ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-xl shadow-slate-900/20 scale-105 border-transparent' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-600 hover:bg-orange-50/50 shadow-sm'}`}
+              className={`whitespace-nowrap px-7 py-3 rounded-2xl text-sm font-extrabold transition-all duration-300 ${selectedCategory === cat ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-xl shadow-slate-900/20 scale-105 border-transparent' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-orange-400 hover:text-orange-600 hover:bg-orange-50/50 shadow-sm'}`}
             >
               {cat}
             </button>
@@ -94,16 +94,16 @@ const ShopPage = () => {
                 {/* UPGRADED: Add to Cart Controls */}
                 <div className="mt-auto">
                   {cartItem ? (
-                    <div className="flex items-center justify-between bg-orange-50 border-2 border-orange-200 rounded-full p-1.5 shadow-inner animate-in zoom-in duration-200">
-                      <button onClick={() => updateCartQuantity(product, -1)} className="w-12 h-12 flex items-center justify-center bg-white rounded-full text-orange-600 shadow-sm hover:bg-orange-500 hover:text-white transition-all active:scale-90"><Minus size={20}/></button>
-                      <span className="font-black text-orange-700 text-lg w-10 text-center">{cartItem.quantity}</span>
-                      <button onClick={() => updateCartQuantity(product, 1)} className="w-12 h-12 flex items-center justify-center bg-white rounded-full text-orange-600 shadow-sm hover:bg-orange-500 hover:text-white transition-all active:scale-90"><Plus size={20}/></button>
+                    <div className="flex items-center justify-between bg-orange-50 border-2 border-orange-200 rounded-2xl p-1.5 shadow-inner animate-in zoom-in duration-200">
+                      <button onClick={() => updateCartQuantity(product, -1)} className="w-12 h-12 flex items-center justify-center bg-white rounded-xl text-orange-600 shadow-sm hover:bg-orange-500 hover:text-white transition-all active:scale-90"><Minus size={20}/></button>
+                      <span className="font-black text-orange-700 text-xl w-10 text-center">{cartItem.quantity}</span>
+                      <button onClick={() => updateCartQuantity(product, 1)} className="w-12 h-12 flex items-center justify-center bg-white rounded-xl text-orange-600 shadow-sm hover:bg-orange-500 hover:text-white transition-all active:scale-90"><Plus size={20}/></button>
                     </div>
                   ) : (
                     <button 
                       disabled={!isShopOpen} 
                       onClick={() => updateCartQuantity(product, 1)} 
-                      className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-full font-extrabold text-sm uppercase tracking-widest hover:from-orange-600 hover:to-amber-600 disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-1 active:scale-[0.97] border border-orange-400 disabled:border-slate-300"
+                      className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-2xl font-extrabold text-base uppercase tracking-widest hover:from-orange-600 hover:to-amber-600 disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 transition-all duration-300 shadow-lg shadow-orange-500/30 active:scale-[0.97] border border-orange-400 disabled:border-slate-300 min-h-[56px]"
                     >
                       Add To Cart
                     </button>
@@ -120,7 +120,7 @@ const ShopPage = () => {
         <div className="py-24 text-center opacity-60 animate-in fade-in">
             <ShoppingBasket size={64} className="mx-auto mb-6 text-slate-300"/>
             <h3 className="text-2xl font-black text-slate-400 mb-2">No products found</h3>
-            <p className="font-medium text-slate-500">Try adjusting your search or category filter.</p>
+            <p className="font-medium text-slate-500 text-lg">Try adjusting your search or category filter.</p>
         </div>
       )}
     </div>
