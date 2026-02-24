@@ -17,7 +17,7 @@ const LandingPage = () => {
       <div className="max-w-4xl mx-auto text-center space-y-10 z-10 animate-fade-in-up flex flex-col items-center">
         
         {/* Top Badge */}
-        <div className="inline-flex items-center gap-2.5 bg-white/80 backdrop-blur-xl px-6 py-2.5 rounded-full text-orange-700 text-xs font-black uppercase tracking-widest border border-orange-200 shadow-md hover:shadow-lg transition-all cursor-default">
+        <div className="inline-flex items-center gap-2.5 bg-white/80 backdrop-blur-xl px-6 py-3 rounded-2xl text-orange-700 text-xs font-black uppercase tracking-widest border border-orange-200 shadow-md hover:shadow-lg transition-all cursor-default">
           <Sparkles size={16} className="text-orange-500 fill-orange-500" /> Premium Quality Assured
         </div>
         
@@ -29,18 +29,25 @@ const LandingPage = () => {
           </span>
         </h2>
         
-        <p className="text-slate-500 text-lg sm:text-xl md:text-2xl font-semibold leading-relaxed max-w-2xl mx-auto">
+        <p className="text-slate-500 text-lg sm:text-xl md:text-2xl font-semibold leading-relaxed max-w-2xl mx-auto px-4">
           The finest authentic spices, fresh grains, and everyday household needs delivered straight to your door with unmatched care.
         </p>
         
-        {/* Premium Call To Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-5 pt-4 justify-center w-full sm:w-auto">
-          <button onClick={() => setView('shop')} className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-amber-500 text-white px-10 py-5 rounded-full font-extrabold text-lg hover:from-orange-600 hover:to-amber-600 shadow-xl shadow-orange-500/40 hover:shadow-orange-500/60 transition-all duration-300 hover:-translate-y-1.5 flex items-center justify-center gap-3 group active:scale-95 border border-orange-400">
+        {/* Premium Call To Action Buttons (TALLER & MORE PADDED) */}
+        <div className="flex flex-col sm:flex-row gap-5 pt-4 justify-center w-full sm:w-auto px-6">
+          <button onClick={() => setView('shop')} className="w-full sm:w-auto min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white px-10 py-4 rounded-2xl font-bold text-xl hover:from-orange-600 hover:to-amber-600 shadow-xl shadow-orange-500/40 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-95 border border-orange-400">
             Start Shopping <ChevronRight className="group-hover:translate-x-2 transition-transform" />
           </button>
-          <button onClick={() => setView('auth')} className="w-full sm:w-auto bg-white/90 backdrop-blur-md border-2 border-slate-200 text-slate-800 px-10 py-5 rounded-full font-extrabold text-lg hover:border-orange-400 hover:text-orange-600 transition-all duration-300 active:scale-95 shadow-md hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1.5">
+          <button onClick={() => setView('auth')} className="w-full sm:w-auto min-h-[64px] bg-white/90 backdrop-blur-md border-2 border-slate-200 text-slate-800 px-10 py-4 rounded-2xl font-bold text-xl hover:border-orange-400 hover:text-orange-600 transition-all duration-300 active:scale-95 shadow-md hover:shadow-xl">
             Sign In / Register
           </button>
+        </div>
+
+        {/* Feature Highlights */}
+        <div className="pt-10 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 border-t border-slate-200/80 mt-8">
+            <div className="flex flex-col items-center lg:items-start gap-2"><ShieldCheck className="text-orange-500" size={28}/><span className="text-sm font-bold text-slate-700">100% Secure</span></div>
+            <div className="flex flex-col items-center lg:items-start gap-2"><Clock className="text-orange-500" size={28}/><span className="text-sm font-bold text-slate-700">Fast Delivery</span></div>
+            <div className="flex flex-col items-center lg:items-start gap-2"><HeartHandshake className="text-orange-500" size={28}/><span className="text-sm font-bold text-slate-700">Trusted Store</span></div>
         </div>
 
       </div>
@@ -53,7 +60,7 @@ const LandingPage = () => {
       </div>
 
       <div className="hidden lg:flex absolute bottom-1/4 right-32 flex-col items-center justify-center animate-float-delayed opacity-80">
-          <div className="glass px-6 py-4 rounded-full text-slate-800 shadow-2xl rotate-[5deg] border border-white/80 flex items-center gap-3 font-black text-lg">
+          <div className="glass px-6 py-4 rounded-2xl text-slate-800 shadow-2xl rotate-[5deg] border border-white/80 flex items-center gap-3 font-black text-lg">
               <Zap className="text-amber-500 fill-amber-500" size={24}/> Super Fast
           </div>
       </div>
