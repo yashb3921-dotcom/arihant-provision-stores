@@ -39,18 +39,19 @@ const SuccessPage = () => {
             {/* Custom Messaging based on Type */}
             {isTakeaway ? (
                 <div className="bg-blue-50 border-2 border-blue-200 p-5 rounded-2xl flex gap-4 shadow-inner mb-6">
-                    <Store className="text-blue-500 shrink-0" size={24}/>
+                    <Store className="text-blue-500 shrink-0 mt-1" size={28}/>
                     <div>
-                        <p className="text-sm font-bold text-slate-800 mb-1">Ready for Takeaway Soon</p>
-                        <p className="text-xs font-semibold text-slate-600">Please pick it up from: {STORE_INFO.address}</p>
+                        <p className="text-lg font-black text-blue-900 mb-0.5">Ready for Takeaway</p>
+                        <p className="text-sm font-bold text-blue-700/80 leading-snug">Please pick it up from our store.</p>
+                        <p className="text-blue-700 font-black mt-2 bg-blue-100/50 inline-block px-3 py-1.5 rounded-xl">{STORE_INFO.address}</p>
                     </div>
                 </div>
             ) : (
                 <div className="bg-orange-50 border-2 border-orange-200 p-5 rounded-2xl flex gap-4 shadow-inner mb-6">
-                    <Truck className="text-orange-500 shrink-0" size={24}/>
+                    <Truck className="text-orange-500 shrink-0 mt-1" size={28}/>
                     <div>
-                        <p className="text-sm font-bold text-slate-800 mb-1">Out for Delivery Soon</p>
-                        <p className="text-xs font-semibold text-slate-600">Our executive will contact you shortly.</p>
+                        <p className="text-lg font-black text-orange-900 mb-0.5">Out for Delivery</p>
+                        <p className="text-sm font-bold text-orange-700/80 leading-snug">Our executive will contact you shortly.</p>
                     </div>
                 </div>
             )}
@@ -66,6 +67,11 @@ const SuccessPage = () => {
                 </div>
             </div>
             
+            <div className="flex justify-between items-center pt-6 border-t-2 border-slate-100">
+                <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Total Amount</span>
+                <span className="text-4xl font-black text-slate-900 tracking-tight">₹{lastOrder.total_amount}</span>
+            </div>
+
           </div>
           
           <button onClick={() => setView('shop')} className="w-full min-h-[64px] bg-gradient-to-r from-slate-900 to-slate-800 text-white py-5 rounded-full font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 shadow-xl hover:shadow-orange-500/40 hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-3 group active:scale-95 animate-in fade-in duration-1000 delay-500 border border-slate-700">
