@@ -108,24 +108,39 @@ export const CartProvider = ({ children }) => {
     return () => supabase.removeChannel(channel);
   }, [user, isAdmin]);
 
-  const updateCartQuantity = (product, delta) => {
+  const addToCart = (product, variantLabel, variantMultiplier, quantity = 1) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
+        const cartItemId = `${product.id}-${variantLabel}`;
+        const existing = prev.find(item => item.cartItemId === cartItemId);
+        if (existing) {
+            return prev.map(item => item.cartItemId === cartItemId ? { ...item, quantity: item.quantity + quantity } : item);
+        }
+        return [...prev, { ...product, cartItemId, variantLabel, variantMultiplier, quantity }];
+    });
+  };
+
+  const updateCartQuantity = (cartItemId, delta) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.cartItemId === cartItemId);
       if (existing) {
         const newQty = Math.max(0, existing.quantity + delta);
-        if (newQty === 0) return prev.filter(item => item.id !== product.id);
-        return prev.map(item => item.id === product.id ? { ...item, quantity: newQty } : item);
+        if (newQty === 0) return prev.filter(item => item.cartItemId !== cartItemId);
+        return prev.map(item => item.cartItemId === cartItemId ? { ...item, quantity: newQty } : item);
       }
-      if (delta > 0) return [...prev, { ...product, quantity: 1 }];
       return prev;
     });
   };
 
-  const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + (calculateDiscount(item.price, item.discount_percent) * item.quantity), 0), [cart]);
+  const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + (Math.floor(calculateDiscount(item.price, item.discount_percent) * item.variantMultiplier) * item.quantity), 0), [cart]);
 
   const placeOrder = async (details, type) => {
-    if (!user) return { error: "Session expired. Please log in." };
+    if (!user) return { error: { message: "Session expired. Please log in." } };
+    
+    // Generates unique order ID required by DB
+    const uniqueOrderId = 'ORD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
     const orderData = {
+      order_id: uniqueOrderId,
       customer_name: details.name,
       customer_phone: details.phone,
       address: details.address,
@@ -142,7 +157,7 @@ export const CartProvider = ({ children }) => {
       setIsCartOpen(false);
       setView('success');
     }
-    return { error: error?.message };
+    return { error };
   };
 
   const updateOrderStatus = async (orderId, status) => {
@@ -150,7 +165,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, isCartOpen, setIsCartOpen, updateCartQuantity, cartTotal, orders, myOrders, lastOrder, placeOrder, updateOrderStatus }}>
+    <CartContext.Provider value={{ cart, isCartOpen, setIsCartOpen, addToCart, updateCartQuantity, cartTotal, orders, myOrders, lastOrder, placeOrder, updateOrderStatus }}>
       {children}
     </CartContext.Provider>
   );
