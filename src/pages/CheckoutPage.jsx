@@ -38,7 +38,7 @@ const CheckoutPage = () => {
   return (
     <div className="max-w-2xl mx-auto py-8 lg:py-12 animate-fade-in-up">
       <div className="flex items-center gap-4 mb-8 px-2">
-          <button onClick={() => setView('shop')} className="p-4 bg-white border-2 border-slate-200 rounded-full hover:border-orange-500 hover:text-orange-600 shadow-sm active:scale-95 transition-all"><ArrowLeft size={24}/></button>
+          <button onClick={() => setView('shop')} className="p-4 bg-white border-2 border-slate-200 rounded-2xl hover:border-orange-500 hover:text-orange-600 shadow-sm active:scale-95 transition-all"><ArrowLeft size={24}/></button>
           <h2 className="text-4xl font-black text-slate-900 tracking-tight">Checkout</h2>
       </div>
 
@@ -71,7 +71,7 @@ const CheckoutPage = () => {
                 <div>
                     <p className="font-black text-blue-800 text-lg">Store Address</p>
                     <p className="text-blue-700/80 font-semibold mt-1">{STORE_INFO.address}</p>
-                    <p className="text-blue-700 font-black mt-2">Owner Phone: {STORE_INFO.phone}</p>
+                    <p className="text-blue-700 font-black mt-2 bg-blue-100/50 inline-block px-3 py-1 rounded-xl">Owner Phone: {STORE_INFO.phone}</p>
                 </div>
             </div>
         )}
