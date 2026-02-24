@@ -131,7 +131,6 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // Multiply by variant weight multiplier
   const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + (Math.floor(calculateDiscount(item.price, item.discount_percent) * item.variantMultiplier) * item.quantity), 0), [cart]);
 
   const placeOrder = async (details, type) => {
@@ -151,6 +150,7 @@ export const CartProvider = ({ children }) => {
       status: 'Pending',
       user_id: user.id
     };
+    
     const { data, error } = await supabase.from('orders').insert([orderData]).select().single();
     if (!error) {
       setLastOrder(data);
