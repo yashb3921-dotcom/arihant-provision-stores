@@ -43,7 +43,7 @@ const SuccessPage = () => {
             </div>
           </div>
           
-          <button onClick={() => setView('shop')} className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-5 rounded-full font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 shadow-xl hover:shadow-orange-500/40 hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-3 group active:scale-95 animate-in fade-in duration-1000 delay-500 border border-orange-400">
+          <button onClick={() => setView('shop')} className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-2xl font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-orange-500/40 transition-all duration-300 flex justify-center items-center gap-3 group active:scale-95 animate-in fade-in duration-1000 delay-500 border border-orange-400">
               Continue Shopping <ChevronRight size={24} className="group-hover:translate-x-2 transition-transform"/>
           </button>
       </div>
