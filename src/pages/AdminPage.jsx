@@ -92,7 +92,7 @@ const AdminPage = () => {
               <div key={order.id} className="bg-white border-2 border-slate-100 rounded-[2rem] p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-in slide-in-from-bottom-4" style={{ animationDelay: `${index * 50}ms` }}>
                   <div className="flex justify-between items-start mb-5">
                       <div>
-                          <p className="font-black text-slate-900 text-xl">Order #{order.id.slice(0,6).toUpperCase()}</p>
+                          <p className="font-black text-slate-900 text-xl">Order {order.order_id}</p>
                           <p className="text-sm font-semibold text-slate-400 mt-1">{new Date(order.created_at).toLocaleString()}</p>
                       </div>
                       <div className="text-right">
@@ -105,7 +105,7 @@ const AdminPage = () => {
                       <p className="text-base font-bold text-slate-800 mb-1 flex items-center gap-2"><User size={16} className="text-orange-500"/> {order.customer_name}</p>
                       <p className="text-sm font-medium text-slate-500 mb-4">{order.customer_phone}</p>
                       <div className="text-sm text-slate-700 font-semibold leading-relaxed bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                          {order.items.map(i => `${i.name} (${i.quantity})`).join(', ')}
+                          {order.items.map(i => `${i.name} [${i.variantLabel}] x${i.quantity}`).join(' • ')}
                       </div>
                   </div>
                   
@@ -141,43 +141,41 @@ const AdminPage = () => {
               <form onSubmit={handleSave} className="space-y-5">
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Product Name</label>
-                    {/* FIXED INPUT PADDING FOR VISIBILITY */}
-                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Base Price (₹)</label>
-                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                     </div>
                     {/* Emphasized Discount Field */}
                     <div>
                         <label className="text-[11px] font-black text-orange-600 ml-3 uppercase tracking-widest flex items-center gap-1"><Tag size={12}/> Discount %</label>
-                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-2 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-base font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-inner" />
+                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-1.5 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-base font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-inner" />
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Category</label>
-                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner">
+                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner">
                             {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Unit</label>
-                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                     </div>
                 </div>
 
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Image URL</label>
-                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
+                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 </div>
                 
-                {/* FIXED TALLER ADMIN SAVE BUTTON */}
-                <button className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-2xl font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 active:scale-[0.98] mt-6 border border-orange-400">
-                    <Save size={24}/> Save Product
+                <button className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4.5 rounded-full font-extrabold text-lg hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:-translate-y-1 active:scale-[0.98] mt-4 border border-orange-400">
+                    <Save size={20}/> Save Product to Store
                 </button>
               </form>
             </div>
