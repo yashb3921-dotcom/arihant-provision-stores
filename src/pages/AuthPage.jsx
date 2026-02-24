@@ -47,8 +47,6 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      
-      {/* Aesthetic Backgrounds */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-orange-200/60 to-rose-200/60 rounded-full blur-[120px] -z-10 animate-pulse"></div>
 
       <div className="w-full max-w-md animate-fade-in-up">
@@ -61,14 +59,13 @@ const AuthPage = () => {
           <h2 className="text-4xl font-black mb-3 text-slate-900 tracking-tight">{form.isSignup ? 'Create Account' : 'Welcome Back'}</h2>
           <p className="text-slate-500 mb-10 font-semibold text-lg">{form.isSignup ? 'Sign up to start shopping.' : 'Enter your details to access your account.'}</p>
           
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {form.isSignup && (
               <div className="space-y-2">
                 <label className="text-[11px] font-black text-slate-500 ml-2 uppercase tracking-widest">Full Name</label>
                 <div className="relative group">
                     <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
-                    {/* FIXED SQUISHED INPUTS (p-4 replaces invalid p-4.5) */}
-                    <input type="text" placeholder="e.g. Rahul Sharma" required className="w-full p-4 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-sm" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+                    <input type="text" placeholder="e.g. Rahul Sharma" required className="w-full py-5 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
                 </div>
               </div>
             )}
@@ -77,7 +74,7 @@ const AuthPage = () => {
               <label className="text-[11px] font-black text-slate-500 ml-2 uppercase tracking-widest">Mobile Number or Admin Email</label>
               <div className="relative group">
                 <Smartphone className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
-                <input type="text" placeholder="e.g. 9876543210" required className="w-full p-4 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-sm" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})} />
+                <input type="text" placeholder="e.g. 9876543210" required className="w-full py-5 pl-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})} />
               </div>
             </div>
             
@@ -85,16 +82,15 @@ const AuthPage = () => {
               <label className="text-[11px] font-black text-slate-500 ml-2 uppercase tracking-widest">Password</label>
               <div className="relative group">
                 <KeyRound className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
-                <input type={showPassword ? "text" : "password"} placeholder="••••••••" required className="w-full p-4 pl-14 pr-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-sm" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 transition-colors p-2">
+                <input type={showPassword ? "text" : "password"} placeholder="••••••••" required className="w-full py-5 pl-14 pr-14 bg-white/90 border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all placeholder:text-slate-400 shadow-inner" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800 transition-colors p-1">
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
             
-            {/* UPGRADED, TALLER LOGIN BUTTON */}
-            <button disabled={loading} className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-2xl font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 shadow-xl shadow-orange-500/40 transition-all duration-300 active:scale-95 mt-8 flex justify-center items-center border border-orange-400">
-                {loading ? <Loader className="animate-spin" /> : (form.isSignup ? 'Create Account' : 'Secure Login')}
+            <button disabled={loading} className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-5 rounded-full font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 shadow-xl shadow-orange-500/40 hover:shadow-orange-500/60 transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] mt-8 flex justify-center items-center border border-orange-400">
+                {loading ? <Loader className="animate-spin" size={28} /> : (form.isSignup ? 'Create Account' : 'Secure Login')}
             </button>
           </form>
           
