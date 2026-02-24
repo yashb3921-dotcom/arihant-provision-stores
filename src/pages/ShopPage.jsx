@@ -69,7 +69,6 @@ const ProductCard = ({ product }) => {
                 {hasDiscount && <span className="text-sm text-slate-400 line-through font-bold decoration-2 decoration-red-400/50">₹{originalDisplayPrice}</span>}
             </div>
             
-            {/* VARIANT SELECTOR */}
             <div className="mt-auto space-y-3">
                 <div className="relative">
                     <select value={variant} onChange={e => setVariant(e.target.value)} className="w-full appearance-none bg-slate-50 border-2 border-slate-200 rounded-2xl py-3 pl-4 pr-10 text-sm font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-inner">
@@ -108,7 +107,6 @@ const ShopPage = () => {
   return (
     <div className="py-8 space-y-10 animate-fade-in-up">
       
-      {/* Header & Filters */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b-2 border-slate-200/60">
         <div>
           <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-3">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-500">Collection</span></h2>
@@ -139,14 +137,12 @@ const ShopPage = () => {
         </div>
       </div>
 
-      {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-8">
-        {filteredProducts.map((product, index) => (
+        {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
       
-      {/* Empty State */}
       {filteredProducts.length === 0 && (
         <div className="py-24 text-center opacity-60 animate-in fade-in">
             <ShoppingBasket size={64} className="mx-auto mb-6 text-slate-300"/>
