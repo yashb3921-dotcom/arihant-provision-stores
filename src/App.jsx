@@ -18,7 +18,7 @@ import AuthPage from './pages/AuthPage';
 import ShopPage from './pages/ShopPage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
-import CheckoutPage from './pages/CheckoutPage'; // Added import
+import CheckoutPage from './pages/CheckoutPage'; 
 import SuccessPage from './pages/SuccessPage';
 
 const AppContent = () => {
