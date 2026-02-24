@@ -131,6 +131,7 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  // Multiply by variant weight multiplier
   const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + (Math.floor(calculateDiscount(item.price, item.discount_percent) * item.variantMultiplier) * item.quantity), 0), [cart]);
 
   const placeOrder = async (details, type) => {
