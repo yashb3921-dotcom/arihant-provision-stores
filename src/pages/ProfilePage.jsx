@@ -18,7 +18,7 @@ const ProfilePage = () => {
       
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-          <button onClick={() => setView('shop')} className="p-3 bg-white border-2 border-slate-200 rounded-full hover:border-orange-500 hover:text-orange-600 shadow-sm hover:shadow-md transition-all active:scale-95 hover:-translate-y-0.5"><ArrowLeft size={20}/></button>
+          <button onClick={() => setView('shop')} className="p-4 bg-white border-2 border-slate-200 rounded-2xl hover:border-orange-500 hover:text-orange-600 shadow-sm hover:shadow-md transition-all active:scale-95"><ArrowLeft size={24}/></button>
           <h2 className="text-4xl font-black text-slate-900 tracking-tight">My Profile</h2>
       </div>
       
@@ -35,7 +35,7 @@ const ProfilePage = () => {
               <p className="text-slate-500 font-semibold mb-4 flex items-center justify-center sm:justify-start gap-2">
                   <Smartphone size={18}/> {user.email.includes('@arihant.com') ? user.email.split('@')[0] : user.email}
               </p>
-              <div className="inline-flex items-center gap-2 bg-white/80 text-slate-700 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 shadow-sm">
+              <div className="inline-flex items-center gap-2 bg-white/80 text-slate-700 px-5 py-2.5 rounded-full text-sm font-black uppercase tracking-widest border border-slate-200 shadow-sm">
                   <Package size={16}/> {myOrders.length} Lifetime Orders
               </div>
           </div>
