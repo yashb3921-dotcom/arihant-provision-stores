@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, User, MapPin, Smartphone } from 'lucide-react';
-import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext.jsx';
-import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase.js';
+import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, User, MapPin, Smartphone, ChevronDown, ChevronUp } from 'lucide-react';
+import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext';
+import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase';
 
 const AdminPage = () => {
   const { isAdmin } = useAuth();
@@ -9,6 +9,7 @@ const AdminPage = () => {
   const { products, isShopOpen, toggleShopStatus, fetchProducts } = useShop();
   const { orders, updateOrderStatus } = useCart();
   const [editingProduct, setEditingProduct] = useState(null);
+  const [expandedOrder, setExpandedOrder] = useState(null);
 
   useEffect(() => {
     if (!isAdmin) setView('shop');
@@ -48,6 +49,14 @@ const AdminPage = () => {
         setEditingProduct(null); 
         e.target.reset(); 
         fetchProducts(); 
+    }
+  };
+
+  const toggleOrderExpand = (orderId) => {
+    if (expandedOrder === orderId) {
+      setExpandedOrder(null);
+    } else {
+      setExpandedOrder(orderId);
     }
   };
 
@@ -96,66 +105,89 @@ const AdminPage = () => {
                       <tr className="bg-slate-50 text-[11px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-200">
                         <th className="p-5 whitespace-nowrap">Order ID & Date</th>
                         <th className="p-5 whitespace-nowrap">Customer Info</th>
-                        <th className="p-5 whitespace-nowrap">Items List</th>
+                        <th className="p-5 whitespace-nowrap">Items Summary</th>
                         <th className="p-5 whitespace-nowrap">Total Amount</th>
                         <th className="p-5 text-right whitespace-nowrap">Update Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {orders.map((order) => (
-                        <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
-                          
-                          <td className="p-5 align-top whitespace-nowrap">
-                            <p className="font-black text-slate-900 text-sm">{order.order_id}</p>
-                            <p className="text-xs text-slate-400 font-medium mt-1">{new Date(order.created_at).toLocaleString()}</p>
-                          </td>
-                          
-                          <td className="p-5 align-top">
-                            <p className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><User size={14} className="text-orange-500 shrink-0"/> {order.customer_name}</p>
-                            <p className="text-xs text-slate-500 font-bold mt-1.5 flex items-center gap-1.5"><Smartphone size={14} className="text-slate-400 shrink-0"/> {order.customer_phone}</p>
-                            
-                            {/* FIXED: Prominent Delivery Address Box */}
-                            {order.order_type === 'delivery' && (
-                                <div className="mt-3 bg-blue-50 p-3 rounded-xl border border-blue-200 max-w-[260px] whitespace-normal shadow-inner">
-                                    <p className="text-xs text-blue-900 font-bold flex items-start gap-2 leading-relaxed">
-                                        <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5"/>
-                                        {order.address}
-                                    </p>
-                                </div>
-                            )}
-                          </td>
-                          
-                          {/* FIXED: Beautiful Un-Truncated Items List */}
-                          <td className="p-5 align-top">
-                             <div className="flex flex-col gap-2 max-w-[280px]">
-                                {order.items.map((i, idx) => (
-                                    <div key={idx} className="text-xs text-slate-700 font-bold leading-snug bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm whitespace-normal flex justify-between items-center gap-2">
-                                       <span className="line-clamp-2">{i.name}</span>
-                                       <div className="flex items-center gap-1.5 shrink-0">
-                                           <span className="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-md">{i.variantLabel}</span>
-                                           <span className="text-slate-900 font-black text-sm">×{i.quantity}</span>
-                                       </div>
+                        <React.Fragment key={order.id}>
+                            <tr className={`hover:bg-slate-50/50 transition-colors group cursor-pointer ${expandedOrder === order.id ? 'bg-orange-50/30' : ''}`} onClick={() => toggleOrderExpand(order.id)}>
+                              
+                              <td className="p-5 align-top whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                    <button className="text-slate-400 hover:text-orange-500 transition-colors">
+                                        {expandedOrder === order.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    <div>
+                                        <p className="font-black text-slate-900 text-sm">{order.order_id}</p>
+                                        <p className="text-xs text-slate-400 font-medium mt-1">{new Date(order.created_at).toLocaleString()}</p>
                                     </div>
-                                ))}
-                             </div>
-                          </td>
-                          
-                          <td className="p-5 align-top whitespace-nowrap">
-                             <p className="font-black text-slate-900 text-xl">₹{order.total_amount}</p>
-                             <span className={`text-[10px] font-black uppercase px-3 py-1.5 rounded-lg mt-1.5 inline-block border shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
-                          </td>
-                          
-                          <td className="p-5 text-right align-top whitespace-nowrap">
-                             <select 
-                                value={order.status} 
-                                onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
-                                className={`text-xs font-black px-4 py-3 rounded-2xl border-none outline-none cursor-pointer uppercase tracking-widest transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800 focus:ring-green-400' : order.status === 'Cancelled' ? 'bg-red-100 text-red-800 focus:ring-red-400' : 'bg-orange-100 text-orange-800 focus:ring-orange-400'} ring-2 ring-transparent`}
-                            >
-                                {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                            </select>
-                          </td>
+                                </div>
+                              </td>
+                              
+                              <td className="p-5 align-top">
+                                <p className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><User size={14} className="text-orange-500 shrink-0"/> {order.customer_name}</p>
+                                <p className="text-xs text-slate-500 font-bold mt-1.5 flex items-center gap-1.5"><Smartphone size={14} className="text-slate-400 shrink-0"/> {order.customer_phone}</p>
+                                
+                                {order.order_type === 'delivery' && (
+                                    <div className="mt-3 bg-blue-50 p-3 rounded-xl border border-blue-200 max-w-[260px] whitespace-normal shadow-inner">
+                                        <p className="text-xs text-blue-900 font-bold flex items-start gap-2 leading-relaxed">
+                                            <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5"/>
+                                            {order.address}
+                                        </p>
+                                    </div>
+                                )}
+                              </td>
+                              
+                              <td className="p-5 align-top">
+                                 <div className="text-xs text-slate-600 font-bold">
+                                    {order.items.length} {order.items.length === 1 ? 'Item' : 'Items'}
+                                    <br/>
+                                    <span className="text-orange-600 text-[10px] uppercase tracking-wider mt-1 inline-block bg-orange-100 px-2 py-1 rounded-md">Click to view details</span>
+                                 </div>
+                              </td>
+                              
+                              <td className="p-5 align-top whitespace-nowrap">
+                                 <p className="font-black text-slate-900 text-xl">₹{order.total_amount}</p>
+                                 <span className={`text-[10px] font-black uppercase px-3 py-1.5 rounded-lg mt-1.5 inline-block border shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
+                              </td>
+                              
+                              <td className="p-5 text-right align-top whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                                 <select 
+                                    value={order.status} 
+                                    onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
+                                    className={`text-xs font-black px-4 py-3 rounded-2xl border-none outline-none cursor-pointer uppercase tracking-widest transition-all shadow-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800 focus:ring-green-400' : order.status === 'Cancelled' ? 'bg-red-100 text-red-800 focus:ring-red-400' : 'bg-orange-100 text-orange-800 focus:ring-orange-400'} ring-2 ring-transparent`}
+                                >
+                                    {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                              </td>
 
-                        </tr>
+                            </tr>
+                            
+                            {/* Expanded Order Items Row */}
+                            {expandedOrder === order.id && (
+                                <tr className="bg-slate-50/80 border-b border-slate-200 shadow-inner">
+                                    <td colSpan="5" className="p-6">
+                                        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm max-w-3xl">
+                                            <h4 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4 border-b border-slate-100 pb-2">Order Items ({order.items.length})</h4>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {order.items.map((i, idx) => (
+                                                    <div key={idx} className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm font-bold text-slate-800 line-clamp-1">{i.name}</span>
+                                                            <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-md w-max mt-1 font-bold">{i.variantLabel}</span>
+                                                        </div>
+                                                        <span className="text-slate-900 font-black bg-white px-3 py-1 rounded-lg shadow-sm border border-slate-200">×{i.quantity}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
                       ))}
                     </tbody>
                   </table>
@@ -189,6 +221,7 @@ const AdminPage = () => {
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Base Price (₹)</label>
                         <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                     </div>
+                    {/* Emphasized Discount Field */}
                     <div>
                         <label className="text-[11px] font-black text-orange-600 ml-3 uppercase tracking-widest flex items-center gap-1"><Tag size={12}/> Discount %</label>
                         <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-1.5 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-base font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-inner" />
@@ -262,3 +295,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+
