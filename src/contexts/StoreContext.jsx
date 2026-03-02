@@ -50,7 +50,7 @@ export const ShopProvider = ({ children }) => {
   };
 
   const fetchStatus = async () => {
-    const { data } = await supabase.from('settings').select('value').eq('id', 'shop_status').single();
+    const { data } = await supabase.from('settings').select('value').eq('id', 'shop_status').maybeSingle();
     if (data) setIsShopOpen(data.value?.isOpen ?? true);
   };
 
@@ -110,20 +110,37 @@ export const CartProvider = ({ children }) => {
     return () => supabase.removeChannel(channel);
   }, [user, isAdmin]);
 
-  const updateCartQuantity = (product, delta) => {
+  // RESTORED: Required for ShopPage functionality
+  const addToCart = (product, variantLabel, variantMultiplier, quantity = 1) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
+        const cartItemId = `${product.id}-${variantLabel}`;
+        const existing = prev.find(item => item.cartItemId === cartItemId);
+        if (existing) {
+            return prev.map(item => item.cartItemId === cartItemId ? { ...item, quantity: item.quantity + quantity } : item);
+        }
+        return [...prev, { ...product, cartItemId, variantLabel, variantMultiplier, quantity }];
+    });
+  };
+
+  // RESTORED: Required for CartDrawer and ShopPage UI
+  const updateCartQuantity = (cartItemId, delta) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.cartItemId === cartItemId);
       if (existing) {
         const newQty = Math.max(0, existing.quantity + delta);
-        if (newQty === 0) return prev.filter(item => item.id !== product.id);
-        return prev.map(item => item.id === product.id ? { ...item, quantity: newQty } : item);
+        if (newQty === 0) return prev.filter(item => item.cartItemId !== cartItemId);
+        return prev.map(item => item.cartItemId === cartItemId ? { ...item, quantity: newQty } : item);
       }
-      if (delta > 0) return [...prev, { ...product, quantity: 1 }];
       return prev;
     });
   };
 
-  const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + (calculateDiscount(item.price, item.discount_percent) * item.quantity), 0), [cart]);
+  // RESTORED: Total calculation including multipliers
+  const cartTotal = useMemo(() => cart.reduce((sum, item) => {
+    const baseDiscountedPrice = calculateDiscount(item.price, item.discount_percent);
+    const finalItemPrice = Math.floor(baseDiscountedPrice * item.variantMultiplier);
+    return sum + (finalItemPrice * item.quantity);
+  }, 0), [cart]);
 
   const placeOrder = async (details, type) => {
     if (!user) return { error: { message: "Session expired. Please log in." } };
@@ -157,7 +174,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, isCartOpen, setIsCartOpen, updateCartQuantity, cartTotal, orders, myOrders, lastOrder, placeOrder, updateOrderStatus }}>
+    <CartContext.Provider value={{ cart, isCartOpen, setIsCartOpen, addToCart, updateCartQuantity, cartTotal, orders, myOrders, lastOrder, placeOrder, updateOrderStatus }}>
       {children}
     </CartContext.Provider>
   );
