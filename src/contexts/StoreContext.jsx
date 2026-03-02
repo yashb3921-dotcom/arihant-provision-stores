@@ -50,24 +50,39 @@ export const ShopProvider = ({ children }) => {
   };
 
   const fetchStatus = async () => {
-    const { data } = await supabase.from('settings').select('value').eq('id', 'shop_status').single();
-    if (data) setIsShopOpen(data.value?.isOpen ?? true);
+    const { data, error } = await supabase.from('settings').select('value').eq('id', 'shop_status').single();
+    // Only update state if data exists to prevent undefined errors
+    if (!error && data) {
+        setIsShopOpen(data.value?.isOpen ?? true);
+    }
   };
 
   useEffect(() => {
     fetchProducts();
     fetchStatus();
+    
+    // 1. Supabase Realtime Listener (Instant Updates)
     const channel = supabase.channel('shop-updates')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, fetchProducts)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, fetchStatus)
       .subscribe();
-    return () => supabase.removeChannel(channel);
+      
+    // 2. Safe Fallback Polling (Every 10 seconds)
+    // This guarantees the status updates even if Realtime drops or RLS blocks the socket
+    const intervalId = setInterval(() => {
+        fetchStatus();
+    }, 10000);
+
+    return () => {
+        supabase.removeChannel(channel);
+        clearInterval(intervalId);
+    };
   }, []);
 
   const toggleShopStatus = async () => {
     const newVal = !isShopOpen;
     await supabase.from('settings').upsert({ id: 'shop_status', value: { isOpen: newVal } });
-    setIsShopOpen(newVal);
+    setIsShopOpen(newVal); // Optimistic UI update for immediate feedback in Admin Panel
   };
 
   return <ShopContext.Provider value={{ products, isShopOpen, toggleShopStatus, fetchProducts }}>{children}</ShopContext.Provider>;
@@ -108,37 +123,34 @@ export const CartProvider = ({ children }) => {
     return () => supabase.removeChannel(channel);
   }, [user, isAdmin]);
 
-  const addToCart = (product, variantLabel, variantMultiplier, quantity = 1) => {
+  // UPGRADED: Handles Weight Variants
+  const updateCartQuantity = (product, delta, variant = { label: 'Default', multiplier: 1 }) => {
     setCart(prev => {
-        const cartItemId = `${product.id}-${variantLabel}`;
-        const existing = prev.find(item => item.cartItemId === cartItemId);
-        if (existing) {
-            return prev.map(item => item.cartItemId === cartItemId ? { ...item, quantity: item.quantity + quantity } : item);
-        }
-        return [...prev, { ...product, cartItemId, variantLabel, variantMultiplier, quantity }];
-    });
-  };
-
-  const updateCartQuantity = (cartItemId, delta) => {
-    setCart(prev => {
+      const cartItemId = `${product.id}-${variant.label}`;
       const existing = prev.find(item => item.cartItemId === cartItemId);
+      
       if (existing) {
         const newQty = Math.max(0, existing.quantity + delta);
         if (newQty === 0) return prev.filter(item => item.cartItemId !== cartItemId);
         return prev.map(item => item.cartItemId === cartItemId ? { ...item, quantity: newQty } : item);
       }
+      if (delta > 0) return [...prev, { ...product, cartItemId, quantity: 1, variant }];
       return prev;
     });
   };
 
-  const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + (Math.floor(calculateDiscount(item.price, item.discount_percent) * item.variantMultiplier) * item.quantity), 0), [cart]);
+  const cartTotal = useMemo(() => cart.reduce((sum, item) => {
+    const baseDiscountedPrice = calculateDiscount(item.price, item.discount_percent);
+    const finalItemPrice = Math.floor(baseDiscountedPrice * item.variant.multiplier);
+    return sum + (finalItemPrice * item.quantity);
+  }, 0), [cart]);
 
   const placeOrder = async (details, type) => {
-    if (!user) return { error: { message: "Session expired. Please log in." } };
+    if (!user) return { error: "Session expired. Please log in." };
     
-    // Generates unique order ID required by DB
+    // GENERATE UNIQUE ORDER ID TO FIX DATABASE CRASH
     const uniqueOrderId = 'ORD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-
+    
     const orderData = {
       order_id: uniqueOrderId,
       customer_name: details.name,
@@ -158,7 +170,7 @@ export const CartProvider = ({ children }) => {
       setIsCartOpen(false);
       setView('success');
     }
-    return { error };
+    return { error: error?.message };
   };
 
   const updateOrderStatus = async (orderId, status) => {
@@ -166,7 +178,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, isCartOpen, setIsCartOpen, addToCart, updateCartQuantity, cartTotal, orders, myOrders, lastOrder, placeOrder, updateOrderStatus }}>
+    <CartContext.Provider value={{ cart, isCartOpen, setIsCartOpen, updateCartQuantity, cartTotal, orders, myOrders, lastOrder, placeOrder, updateOrderStatus }}>
       {children}
     </CartContext.Provider>
   );
