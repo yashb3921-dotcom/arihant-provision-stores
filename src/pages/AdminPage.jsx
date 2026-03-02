@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, User, MapPin, Smartphone, ChevronDown, ChevronUp } from 'lucide-react';
-import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext';
-import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase';
+import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, User, MapPin, Smartphone, ChevronDown, ChevronUp, Printer, Eye } from 'lucide-react';
+import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext.jsx';
+import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase.js';
 
 const AdminPage = () => {
   const { isAdmin } = useAuth();
@@ -60,6 +60,83 @@ const AdminPage = () => {
     }
   };
 
+  const handlePrint = (order) => {
+    const printWindow = window.open('', '_blank');
+    const isDelivery = order.order_type === 'delivery';
+    
+    const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Receipt - ${order.order_id}</title>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: 0 auto; }
+                .header { text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 30px; }
+                .store-name { font-size: 28px; font-weight: 900; margin: 0; color: #0f172a; }
+                .store-tag { font-size: 12px; color: #64748b; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; }
+                .row { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 30px; }
+                .box { background: #f8fafc; padding: 20px; border-radius: 12px; flex: 1; border: 1px solid #e2e8f0; }
+                .box-title { font-size: 11px; text-transform: uppercase; color: #64748b; margin-top: 0; margin-bottom: 10px; font-weight: 800; letter-spacing: 1px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                th { text-align: left; padding: 12px 10px; border-bottom: 2px solid #e2e8f0; color: #64748b; font-size: 12px; text-transform: uppercase; }
+                td { padding: 14px 10px; border-bottom: 1px solid #f1f5f9; font-size: 15px; font-weight: 600; color: #0f172a; }
+                .variant-badge { font-size: 11px; background: #fff7ed; color: #c2410c; padding: 3px 8px; border-radius: 6px; border: 1px solid #ffedd5; }
+                .total-row { display: flex; justify-content: space-between; font-size: 24px; font-weight: 900; padding-top: 20px; border-top: 2px solid #0f172a; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1 class="store-name">Arihant Provision Store</h1>
+                <div class="store-tag">Order Receipt</div>
+            </div>
+            <div class="row">
+                <div class="box">
+                    <p class="box-title">Order Details</p>
+                    <p style="margin:6px 0; font-weight:800; font-size: 18px;">${order.order_id}</p>
+                    <p style="margin:6px 0; font-size: 14px; color: #475569;">${new Date(order.created_at).toLocaleString()}</p>
+                    <p style="margin:12px 0 0 0; display: inline-block; background: ${isDelivery ? '#eff6ff' : '#faf5ff'}; color: ${isDelivery ? '#1d4ed8' : '#7e22ce'}; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; text-transform: uppercase;">
+                        ${order.order_type}
+                    </p>
+                </div>
+                <div class="box">
+                    <p class="box-title">Customer Info</p>
+                    <p style="margin:6px 0; font-weight:800; font-size: 16px;">${order.customer_name}</p>
+                    <p style="margin:6px 0; font-size: 14px; color: #475569;">${order.customer_phone}</p>
+                    ${isDelivery ? `<p style="margin:12px 0 0 0; font-size:13px; line-height: 1.5; color: #334155; padding-top: 10px; border-top: 1px solid #e2e8f0;"><strong>Delivery To:</strong><br/>${order.address}</p>` : '<p style="margin:12px 0 0 0; font-size:13px; padding-top: 10px; border-top: 1px solid #e2e8f0;"><strong>Store Takeaway</strong></p>'}
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Variant</th>
+                        <th style="text-align: right;">Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${order.items.map(item => `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td><span class="variant-badge">${item.variantLabel}</span></td>
+                            <td style="text-align: right;">x${item.quantity}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <div class="total-row">
+                <span>Grand Total</span>
+                <span>Rs. ${order.total_amount}</span>
+            </div>
+            <script>
+                window.onload = () => { setTimeout(() => { window.print(); window.close(); }, 250); }
+            </script>
+        </body>
+        </html>
+    `;
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
   return (
     <div className="py-12 space-y-8 animate-fade-in-up">
       
@@ -103,58 +180,36 @@ const AdminPage = () => {
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-slate-50 text-[11px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-200">
-                        <th className="p-5 whitespace-nowrap">Order ID & Date</th>
-                        <th className="p-5 whitespace-nowrap">Customer Info</th>
-                        <th className="p-5 whitespace-nowrap">Items Summary</th>
-                        <th className="p-5 whitespace-nowrap">Total Amount</th>
-                        <th className="p-5 text-right whitespace-nowrap">Update Status</th>
+                        <th className="p-5 whitespace-nowrap">Order Info</th>
+                        <th className="p-5 whitespace-nowrap">Customer</th>
+                        <th className="p-5 whitespace-nowrap">Total & Type</th>
+                        <th className="p-5 whitespace-nowrap">Status</th>
+                        <th className="p-5 text-right whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {orders.map((order) => (
                         <React.Fragment key={order.id}>
-                            <tr className={`hover:bg-slate-50/50 transition-colors group cursor-pointer ${expandedOrder === order.id ? 'bg-orange-50/30' : ''}`} onClick={() => toggleOrderExpand(order.id)}>
+                            <tr className={`hover:bg-slate-50/50 transition-colors group ${expandedOrder === order.id ? 'bg-orange-50/30' : ''}`}>
                               
-                              <td className="p-5 align-top whitespace-nowrap">
-                                <div className="flex items-center gap-2">
-                                    <button className="text-slate-400 hover:text-orange-500 transition-colors">
-                                        {expandedOrder === order.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                    </button>
-                                    <div>
-                                        <p className="font-black text-slate-900 text-sm">{order.order_id}</p>
-                                        <p className="text-xs text-slate-400 font-medium mt-1">{new Date(order.created_at).toLocaleString()}</p>
-                                    </div>
+                              <td className="p-5 align-middle whitespace-nowrap">
+                                <div>
+                                    <p className="font-black text-slate-900 text-sm">{order.order_id}</p>
+                                    <p className="text-xs text-slate-400 font-medium mt-1">{new Date(order.created_at).toLocaleDateString()}</p>
                                 </div>
                               </td>
                               
-                              <td className="p-5 align-top">
+                              <td className="p-5 align-middle whitespace-nowrap">
                                 <p className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><User size={14} className="text-orange-500 shrink-0"/> {order.customer_name}</p>
                                 <p className="text-xs text-slate-500 font-bold mt-1.5 flex items-center gap-1.5"><Smartphone size={14} className="text-slate-400 shrink-0"/> {order.customer_phone}</p>
-                                
-                                {order.order_type === 'delivery' && (
-                                    <div className="mt-3 bg-blue-50 p-3 rounded-xl border border-blue-200 max-w-[260px] whitespace-normal shadow-inner">
-                                        <p className="text-xs text-blue-900 font-bold flex items-start gap-2 leading-relaxed">
-                                            <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5"/>
-                                            {order.address}
-                                        </p>
-                                    </div>
-                                )}
                               </td>
                               
-                              <td className="p-5 align-top">
-                                 <div className="text-xs text-slate-600 font-bold">
-                                    {order.items.length} {order.items.length === 1 ? 'Item' : 'Items'}
-                                    <br/>
-                                    <span className="text-orange-600 text-[10px] uppercase tracking-wider mt-1 inline-block bg-orange-100 px-2 py-1 rounded-md">Click to view details</span>
-                                 </div>
-                              </td>
-                              
-                              <td className="p-5 align-top whitespace-nowrap">
+                              <td className="p-5 align-middle whitespace-nowrap">
                                  <p className="font-black text-slate-900 text-xl">₹{order.total_amount}</p>
-                                 <span className={`text-[10px] font-black uppercase px-3 py-1.5 rounded-lg mt-1.5 inline-block border shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
+                                 <span className={`text-[9px] font-black uppercase px-2.5 py-1 rounded-md mt-1 inline-block border shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
                               </td>
                               
-                              <td className="p-5 text-right align-top whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                              <td className="p-5 align-middle whitespace-nowrap">
                                  <select 
                                     value={order.status} 
                                     onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
@@ -164,25 +219,71 @@ const AdminPage = () => {
                                 </select>
                               </td>
 
+                              <td className="p-5 text-right align-middle whitespace-nowrap">
+                                <div className="flex items-center justify-end gap-2">
+                                  <button 
+                                      onClick={() => toggleOrderExpand(order.id)} 
+                                      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-sm border ${expandedOrder === order.id ? 'bg-slate-800 text-white border-slate-800 hover:bg-slate-700' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'}`}
+                                  >
+                                      {expandedOrder === order.id ? <ChevronUp size={14}/> : <Eye size={14}/>} 
+                                      {expandedOrder === order.id ? 'Close' : 'Details'}
+                                  </button>
+                                  <button 
+                                      onClick={() => handlePrint(order)} 
+                                      className="flex items-center justify-center p-2 rounded-xl bg-orange-50 text-orange-600 border border-orange-200 hover:bg-orange-500 hover:text-white transition-colors shadow-sm"
+                                      title="Print Order"
+                                  >
+                                      <Printer size={16}/>
+                                  </button>
+                                </div>
+                              </td>
+
                             </tr>
                             
-                            {/* Expanded Order Items Row */}
+                            {/* Beautiful Expanded Order Details Section */}
                             {expandedOrder === order.id && (
                                 <tr className="bg-slate-50/80 border-b border-slate-200 shadow-inner">
                                     <td colSpan="5" className="p-6">
-                                        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm max-w-3xl">
-                                            <h4 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4 border-b border-slate-100 pb-2">Order Items ({order.items.length})</h4>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                {order.items.map((i, idx) => (
-                                                    <div key={idx} className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                                        <div className="flex flex-col">
-                                                            <span className="text-sm font-bold text-slate-800 line-clamp-1">{i.name}</span>
-                                                            <span className="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-md w-max mt-1 font-bold">{i.variantLabel}</span>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm w-full">
+                                            
+                                            {/* Left Column: Full Details */}
+                                            <div className="space-y-5">
+                                                <div>
+                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Full Order Info</h4>
+                                                    <p className="text-sm font-bold text-slate-800">Ordered: {new Date(order.created_at).toLocaleString()}</p>
+                                                    <p className="text-sm font-bold text-slate-800 mt-1">Items Total: {order.items.length}</p>
+                                                </div>
+
+                                                <div className="border-t border-slate-100 pt-5">
+                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5"><MapPin size={14}/> {order.order_type === 'delivery' ? 'Delivery Address' : 'Pickup Instructions'}</h4>
+                                                    {order.order_type === 'delivery' ? (
+                                                        <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 shadow-inner">
+                                                            <p className="text-sm text-blue-900 font-bold leading-relaxed">{order.address}</p>
                                                         </div>
-                                                        <span className="text-slate-900 font-black bg-white px-3 py-1 rounded-lg shadow-sm border border-slate-200">×{i.quantity}</span>
-                                                    </div>
-                                                ))}
+                                                    ) : (
+                                                        <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100 shadow-inner">
+                                                            <p className="text-sm text-orange-900 font-bold leading-relaxed">Customer will pick up from the store.</p>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
+
+                                            {/* Right Column: Order Items */}
+                                            <div className="md:border-l md:border-slate-100 md:pl-6">
+                                                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3 flex items-center gap-1.5"><Truck size={14}/> Ordered Items</h4>
+                                                <div className="space-y-3 max-h-[220px] overflow-y-auto pr-2 no-scrollbar">
+                                                    {order.items.map((i, idx) => (
+                                                        <div key={idx} className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                                            <div className="flex flex-col">
+                                                                <span className="text-sm font-bold text-slate-800 line-clamp-1">{i.name}</span>
+                                                                <span className="text-[10px] bg-white border border-orange-200 text-orange-700 px-2 py-0.5 rounded-md w-max mt-1 font-black shadow-sm">{i.variantLabel}</span>
+                                                            </div>
+                                                            <span className="text-slate-900 font-black bg-white px-3 py-1 rounded-lg shadow-sm border border-slate-200">×{i.quantity}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -295,4 +396,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
-
+export default AdminPage;
