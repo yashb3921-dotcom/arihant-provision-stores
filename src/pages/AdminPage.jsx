@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, User } from 'lucide-react';
-import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext';
-import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase';
+import { LayoutDashboard, CheckCircle, X, Plus, Truck, Edit, Save, Trash2, Tag, User, MapPin, Smartphone } from 'lucide-react';
+import { useAuth, useNavigation, useShop, useCart } from '../contexts/StoreContext.jsx';
+import { supabase, CATEGORIES, ORDER_STATUSES, calculateDiscount } from '../config/supabase.js';
 
 const AdminPage = () => {
   const { isAdmin } = useAuth();
@@ -74,10 +74,10 @@ const AdminPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
         
-        {/* NEW ACTIVE ORDERS TABLE UI */}
-        <div className="lg:col-span-2 glass rounded-[3rem] overflow-hidden flex flex-col h-[750px] border border-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.05)]">
+        {/* ACTIVE ORDERS TABLE UI */}
+        <div className="xl:col-span-2 glass rounded-[3rem] overflow-hidden flex flex-col h-[750px] border border-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.05)]">
           <div className="p-8 border-b border-slate-200/60 flex items-center justify-between bg-white/60 backdrop-blur-md">
             <div>
                 <h3 className="font-black text-3xl flex items-center gap-3 text-slate-900"><Truck className="text-orange-600" size={32}/> Live Orders</h3>
@@ -91,42 +91,61 @@ const AdminPage = () => {
           <div className="overflow-x-auto overflow-y-auto flex-1 p-6 no-scrollbar bg-slate-50/30">
             {orders.length > 0 ? (
                 <div className="bg-white rounded-3xl shadow-sm border border-slate-100 min-w-[800px] overflow-hidden">
-                  <table className="w-full text-left border-collapse whitespace-nowrap">
+                  <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-slate-50 text-[11px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-200">
-                        <th className="p-5">Order ID & Date</th>
-                        <th className="p-5">Customer Info</th>
-                        <th className="p-5">Items List</th>
-                        <th className="p-5">Total Amount</th>
-                        <th className="p-5 text-right">Update Status</th>
+                        <th className="p-5 whitespace-nowrap">Order ID & Date</th>
+                        <th className="p-5 whitespace-nowrap">Customer Info</th>
+                        <th className="p-5 whitespace-nowrap">Items List</th>
+                        <th className="p-5 whitespace-nowrap">Total Amount</th>
+                        <th className="p-5 text-right whitespace-nowrap">Update Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {orders.map((order) => (
                         <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
                           
-                          <td className="p-5">
+                          <td className="p-5 align-top whitespace-nowrap">
                             <p className="font-black text-slate-900 text-sm">{order.order_id}</p>
                             <p className="text-xs text-slate-400 font-medium mt-1">{new Date(order.created_at).toLocaleString()}</p>
                           </td>
                           
-                          <td className="p-5">
-                            <p className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><User size={14} className="text-orange-500"/> {order.customer_name}</p>
-                            <p className="text-xs text-slate-500 font-bold mt-1.5">{order.customer_phone}</p>
+                          <td className="p-5 align-top">
+                            <p className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><User size={14} className="text-orange-500 shrink-0"/> {order.customer_name}</p>
+                            <p className="text-xs text-slate-500 font-bold mt-1.5 flex items-center gap-1.5"><Smartphone size={14} className="text-slate-400 shrink-0"/> {order.customer_phone}</p>
+                            
+                            {/* FIXED: Prominent Delivery Address Box */}
+                            {order.order_type === 'delivery' && (
+                                <div className="mt-3 bg-blue-50 p-3 rounded-xl border border-blue-200 max-w-[260px] whitespace-normal shadow-inner">
+                                    <p className="text-xs text-blue-900 font-bold flex items-start gap-2 leading-relaxed">
+                                        <MapPin size={16} className="text-blue-600 shrink-0 mt-0.5"/>
+                                        {order.address}
+                                    </p>
+                                </div>
+                            )}
                           </td>
                           
-                          <td className="p-5">
-                             <div className="text-xs text-slate-700 font-bold leading-relaxed max-w-[250px] whitespace-normal line-clamp-2">
-                                {order.items.map(i => `${i.name} [${i.variantLabel}] x${i.quantity}`).join(' • ')}
+                          {/* FIXED: Beautiful Un-Truncated Items List */}
+                          <td className="p-5 align-top">
+                             <div className="flex flex-col gap-2 max-w-[280px]">
+                                {order.items.map((i, idx) => (
+                                    <div key={idx} className="text-xs text-slate-700 font-bold leading-snug bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm whitespace-normal flex justify-between items-center gap-2">
+                                       <span className="line-clamp-2">{i.name}</span>
+                                       <div className="flex items-center gap-1.5 shrink-0">
+                                           <span className="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-md">{i.variantLabel}</span>
+                                           <span className="text-slate-900 font-black text-sm">×{i.quantity}</span>
+                                       </div>
+                                    </div>
+                                ))}
                              </div>
                           </td>
                           
-                          <td className="p-5">
+                          <td className="p-5 align-top whitespace-nowrap">
                              <p className="font-black text-slate-900 text-xl">₹{order.total_amount}</p>
-                             <span className={`text-[10px] font-black uppercase px-3 py-1.5 rounded-lg mt-1 inline-block border shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
+                             <span className={`text-[10px] font-black uppercase px-3 py-1.5 rounded-lg mt-1.5 inline-block border shadow-sm ${order.order_type === 'delivery' ? 'bg-blue-50 text-blue-600 border-blue-200' : 'bg-purple-50 text-purple-600 border-purple-200'}`}>{order.order_type}</span>
                           </td>
                           
-                          <td className="p-5 text-right">
+                          <td className="p-5 text-right align-top whitespace-nowrap">
                              <select 
                                 value={order.status} 
                                 onChange={(e) => updateOrderStatus(order.id, e.target.value)} 
@@ -153,7 +172,7 @@ const AdminPage = () => {
         {/* Inventory & Editor Section */}
         <div className="space-y-6 h-[750px] flex flex-col">
           
-          {/* Product Form (LARGE INPUTS INTACT) */}
+          {/* Product Form */}
           {editingProduct && (
             <div className="glass p-8 rounded-[3rem] border border-orange-200 shadow-2xl relative animate-in slide-in-from-right duration-300 z-20">
               <button onClick={() => setEditingProduct(null)} className="absolute top-6 right-6 text-slate-400 hover:text-red-500 hover:rotate-90 transition-all bg-white p-2.5 rounded-full shadow-sm border border-slate-100"><X size={20}/></button>
@@ -162,40 +181,40 @@ const AdminPage = () => {
               <form onSubmit={handleSave} className="space-y-5">
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Product Name</label>
-                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-lg font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
+                    <input name="name" defaultValue={editingProduct.name} placeholder="e.g. Premium Basmati Rice" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Base Price (₹)</label>
-                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-lg font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
+                        <input name="price" defaultValue={editingProduct.price} type="number" step="0.01" placeholder="0.00" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-black outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                     </div>
                     <div>
                         <label className="text-[11px] font-black text-orange-600 ml-3 uppercase tracking-widest flex items-center gap-1"><Tag size={12}/> Discount %</label>
-                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-2 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-lg font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-sm" />
+                        <input name="discount" defaultValue={editingProduct.discount_percent} type="number" min="0" max="100" placeholder="e.g. 10" className="mt-1.5 w-full p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl text-base font-black text-orange-600 outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/30 transition-all placeholder:text-orange-300 shadow-inner" />
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-5">
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Category</label>
-                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm">
+                        <select name="category" defaultValue={editingProduct.category || 'Essentials'} className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner">
                             {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Unit</label>
-                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
+                        <input name="unit" defaultValue={editingProduct.unit} placeholder="e.g. 1 kg, 500g" required className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                     </div>
                 </div>
 
                 <div>
                     <label className="text-[11px] font-black text-slate-500 ml-3 uppercase tracking-widest">Image URL</label>
-                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-2 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-base font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm" />
+                    <input name="image" defaultValue={editingProduct.image} placeholder="https://..." className="mt-1.5 w-full p-4 bg-white border-2 border-slate-200 rounded-2xl text-sm font-medium outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 </div>
                 
-                <button className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-full font-extrabold text-2xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 active:scale-[0.98] mt-8 border border-orange-400">
-                    <Save size={28}/> Save Product
+                <button className="w-full min-h-[64px] bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-full font-extrabold text-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/40 hover:shadow-orange-500/60 hover:-translate-y-1 active:scale-[0.98] mt-4 border border-orange-400">
+                    <Save size={24}/> Save Product
                 </button>
               </form>
             </div>
