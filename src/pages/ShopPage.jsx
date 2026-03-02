@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Search, Tag, Minus, Plus, ShoppingBasket, ChevronDown } from 'lucide-react';
-import { useShop, useCart } from '../contexts/StoreContext';
-import { CATEGORIES, calculateDiscount } from '../config/supabase';
+import { useShop, useCart } from '../contexts/StoreContext.jsx';
+import { CATEGORIES, calculateDiscount } from '../config/supabase.js';
 
 const ProductCard = ({ product }) => {
     const { isShopOpen } = useShop();
-    const { addToCart } = useCart();
+    const { cart, addToCart, updateCartQuantity } = useCart();
     
     const [variant, setVariant] = useState("1");
     const [customVal, setCustomVal] = useState("");
-    const [added, setAdded] = useState(false);
 
     const discountedPrice = calculateDiscount(product.price, product.discount_percent);
     const hasDiscount = product.discount_percent > 0;
@@ -22,22 +21,25 @@ const ProductCard = ({ product }) => {
     const displayPrice = Math.floor(discountedPrice * (currentMultiplier || 1));
     const originalDisplayPrice = Math.floor(product.price * (currentMultiplier || 1));
 
-    const handleAdd = () => {
-        let label = product.unit;
-        let mult = parseFloat(variant);
+    // Dynamically calculate the active variant label based on dropdown selection
+    let currentLabel = product.unit;
+    if (variant === "0.5") currentLabel = isWeight ? "500 gm" : (isLiquid ? "500 ml" : "Half");
+    else if (variant === "0.25") currentLabel = isWeight ? "250 gm" : (isLiquid ? "250 ml" : "Quarter");
+    else if (variant === "custom") {
+        const v = parseFloat(customVal);
+        if (v > 0) currentLabel = `${v} ${isWeight ? 'gm' : (isLiquid ? 'ml' : 'units')}`;
+    }
 
-        if (variant === "0.5") label = isWeight ? "500 gm" : (isLiquid ? "500 ml" : "Half");
-        else if (variant === "0.25") label = isWeight ? "250 gm" : (isLiquid ? "250 ml" : "Quarter");
-        else if (variant === "custom") {
+    // Check if THIS specific variant of the product is currently in the cart
+    const cartItemId = `${product.id}-${currentLabel}`;
+    const cartItem = cart.find(c => c.cartItemId === cartItemId);
+
+    const handleAdd = () => {
+        if (variant === "custom") {
             const v = parseFloat(customVal);
             if(!v || v <= 0) return alert("Please enter a valid amount");
-            mult = v / 1000;
-            label = `${v} ${isWeight ? 'gm' : (isLiquid ? 'ml' : 'units')}`;
         }
-
-        addToCart(product, label, mult, 1);
-        setAdded(true);
-        setTimeout(() => setAdded(false), 2000);
+        addToCart(product, currentLabel, currentMultiplier, 1);
     };
 
     return (
@@ -72,7 +74,8 @@ const ProductCard = ({ product }) => {
             <div className="mt-auto space-y-3">
                 <div className="relative">
                     <select value={variant} onChange={e => setVariant(e.target.value)} className="w-full appearance-none bg-slate-50 border-2 border-slate-200 rounded-2xl py-3 pl-4 pr-10 text-sm font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all shadow-inner">
-                        <option value="1">1 {product.unit} (Full)</option>
+                        {/* FIX 1: Removed the extra '1' so it says '1 kg (Full)' perfectly */}
+                        <option value="1">{product.unit} (Full)</option>
                         {(isWeight || isLiquid) && <option value="0.5">{isWeight ? '500 gm' : '500 ml'} (Half)</option>}
                         {(isWeight || isLiquid) && <option value="0.25">{isWeight ? '250 gm' : '250 ml'} (Quarter)</option>}
                         <option value="custom">Custom amount...</option>
@@ -84,13 +87,22 @@ const ProductCard = ({ product }) => {
                     <input type="number" placeholder={isWeight ? "Enter grams (e.g. 150)" : "Enter amount"} value={customVal} onChange={e => setCustomVal(e.target.value)} className="w-full bg-orange-50 border-2 border-orange-200 rounded-2xl py-3 px-4 text-sm font-bold outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 transition-all shadow-inner" />
                 )}
 
-                <button 
-                    disabled={!isShopOpen || added} 
-                    onClick={handleAdd} 
-                    className={`w-full text-white py-4 rounded-2xl font-extrabold text-sm uppercase tracking-widest transition-all duration-300 active:scale-[0.97] border min-h-[56px] ${added ? 'bg-green-500 border-green-500 shadow-lg shadow-green-500/40' : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-1 border-orange-400'} disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:border-slate-300 disabled:shadow-none`}
-                >
-                    {added ? 'Added to Bag ✓' : 'Add To Cart'}
-                </button>
+                {/* FIX 2: Dynamic Add to Cart / Quantity Selector */}
+                {cartItem ? (
+                    <div className="flex items-center justify-between bg-orange-50 border-2 border-orange-200 rounded-2xl py-1.5 px-2 shadow-inner animate-in zoom-in duration-200 min-h-[56px]">
+                        <button onClick={() => updateCartQuantity(cartItemId, -1)} className="w-12 h-12 flex items-center justify-center bg-white rounded-xl text-orange-600 shadow-sm hover:bg-orange-500 hover:text-white transition-all active:scale-90"><Minus size={20}/></button>
+                        <span className="font-black text-orange-700 text-xl w-10 text-center">{cartItem.quantity}</span>
+                        <button onClick={() => updateCartQuantity(cartItemId, 1)} className="w-12 h-12 flex items-center justify-center bg-white rounded-xl text-orange-600 shadow-sm hover:bg-orange-500 hover:text-white transition-all active:scale-90"><Plus size={20}/></button>
+                    </div>
+                ) : (
+                    <button 
+                        disabled={!isShopOpen} 
+                        onClick={handleAdd} 
+                        className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-4 rounded-2xl font-extrabold text-sm uppercase tracking-widest transition-all duration-300 active:scale-[0.97] border min-h-[56px] shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-1 border-orange-400 disabled:from-slate-200 disabled:to-slate-200 disabled:text-slate-400 disabled:border-slate-300 disabled:shadow-none"
+                    >
+                        Add To Cart
+                    </button>
+                )}
             </div>
             </div>
         </div>
@@ -107,6 +119,7 @@ const ShopPage = () => {
   return (
     <div className="py-8 space-y-10 animate-fade-in-up">
       
+      {/* Header & Filters */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b-2 border-slate-200/60">
         <div>
           <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-3">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-500">Collection</span></h2>
@@ -137,12 +150,14 @@ const ShopPage = () => {
         </div>
       </div>
 
+      {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-8">
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((product, index) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
       
+      {/* Empty State */}
       {filteredProducts.length === 0 && (
         <div className="py-24 text-center opacity-60 animate-in fade-in">
             <ShoppingBasket size={64} className="mx-auto mb-6 text-slate-300"/>
